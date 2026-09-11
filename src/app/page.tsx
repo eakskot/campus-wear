@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Marquee from "@/components/Marquee";
 import Button from "@/components/ui/Button";
 import Hoodie from "@/components/garments/Hoodie";
 import Joggebukse from "@/components/garments/Joggebukse";
@@ -9,22 +8,20 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="container-px grid gap-10 pb-14 pt-14 md:grid-cols-2 md:gap-6 md:pb-20 md:pt-20">
+      <section className="container-px grid gap-12 pb-16 pt-16 md:grid-cols-2 md:gap-8 md:pb-28 md:pt-24">
         <div className="flex flex-col justify-center">
-          <p className="eyebrow text-ink/50">Skoleklær, ikke russedress</p>
-          <h1 className="mt-4 font-display text-[13vw] font-semibold uppercase leading-[0.92] tracking-tightest md:text-[4.6vw]">
-            Skoleklær
+          <p className="eyebrow text-ink/45">Skoleklær, ikke russedress</p>
+          <h1 className="mt-5 font-display text-[13vw] font-normal leading-[1.02] tracking-tightest md:text-[3.6vw]">
+            Skoleklær som
             <br />
-            som faktisk
-            <br />
-            er kule.
+            faktisk er <em className="italic">kule</em>.
           </h1>
-          <p className="mt-6 max-w-md text-lg text-ink/70">
+          <p className="mt-7 max-w-md text-lg leading-relaxed text-ink/65">
             Hettegenser og joggebukse med skolens logo — designet av folk som
             faktisk går på vgs, ikke av dresskledde mellommenn. Billigere enn
             russedress-leverandørene, og null utslipp fra bomull til dør.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-9 flex flex-wrap gap-4">
             <Button href="/design" variant="primary">
               Design din genser →
             </Button>
@@ -33,38 +30,35 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="mt-12 grid max-w-md grid-cols-3 divide-x divide-ink/15 border-y border-ink/15 py-6">
-            <div className="pr-4">
-              <p className="font-display text-2xl font-semibold">100%</p>
-              <p className="mt-1 text-xs uppercase tracking-wide text-ink/50">
+          <div className="mt-14 grid max-w-md grid-cols-3 gap-6 border-t border-ink/10 pt-6">
+            <div>
+              <p className="font-display text-2xl">100%</p>
+              <p className="mt-1 text-xs uppercase tracking-wide text-ink/45">
                 Klimakompensert
               </p>
             </div>
-            <div className="px-4">
-              <p className="font-display text-2xl font-semibold">449,-</p>
-              <p className="mt-1 text-xs uppercase tracking-wide text-ink/50">
+            <div>
+              <p className="font-display text-2xl">449,-</p>
+              <p className="mt-1 text-xs uppercase tracking-wide text-ink/45">
                 Fra, hettegenser
               </p>
             </div>
-            <div className="pl-4">
-              <p className="font-display text-2xl font-semibold">100%</p>
-              <p className="mt-1 text-xs uppercase tracking-wide text-ink/50">
+            <div>
+              <p className="font-display text-2xl">100%</p>
+              <p className="mt-1 text-xs uppercase tracking-wide text-ink/45">
                 Din egen logo
               </p>
             </div>
           </div>
         </div>
 
-        <div className="relative flex items-center justify-center">
-          <div className="absolute -inset-6 -z-10 border-2 border-ink/10 md:inset-8" />
-          <Hoodie color="#17181B" className="w-3/4 max-w-sm drop-shadow-[8px_10px_0_rgba(13,27,52,0.12)]" />
+        <div className="flex items-center justify-center">
+          <Hoodie color="#232C3D" className="w-2/3 max-w-sm" />
         </div>
       </section>
 
-      <Marquee />
-
       {/* VALUE PROPS */}
-      <section className="container-px grid divide-y divide-ink/15 border-b border-ink/15 md:grid-cols-3 md:divide-x md:divide-y-0">
+      <section className="container-px grid divide-y divide-ink/10 border-y border-ink/10 md:grid-cols-3 md:divide-x md:divide-y-0">
         {[
           {
             n: "01",
@@ -82,85 +76,81 @@ export default function Home() {
             body: "Vi klimakompenserer 100 % av produksjon og frakt på alt vi sender. Kulere klær skal ikke koste mer enn nødvendig for planeten heller.",
           },
         ].map((item) => (
-          <div key={item.n} className="py-10 first:pt-0 md:px-10 md:py-16 md:first:pl-0 md:last:pr-0">
-            <p className="font-display text-sm text-ink/40">{item.n}</p>
-            <h3 className="mt-3 font-display text-2xl font-semibold uppercase tracking-tight">
-              {item.title}
-            </h3>
-            <p className="mt-3 text-ink/70">{item.body}</p>
+          <div key={item.n} className="py-12 first:pt-0 md:px-12 md:py-20 md:first:pl-0 md:last:pr-0">
+            <p className="font-display text-sm italic text-ink/35">{item.n}</p>
+            <h3 className="mt-3 font-display text-2xl">{item.title}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-ink/60">{item.body}</p>
           </div>
         ))}
       </section>
 
       {/* PRODUCT HIGHLIGHT */}
-      <section className="bg-ink text-cream">
-        <div className="container-px py-16 md:py-24">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="font-display text-4xl font-semibold uppercase tracking-tightest md:text-6xl">
-              Produktene
-            </h2>
-            <Link
-              href="/produkter"
-              className="font-display text-sm uppercase tracking-wide text-lime hover:underline"
-            >
-              Se alle produkter →
-            </Link>
-          </div>
+      <section className="container-px py-20 md:py-28">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h2 className="font-display text-4xl italic md:text-5xl">Produktene</h2>
+          <Link
+            href="/produkter"
+            className="eyebrow text-ink/55 hover:text-rust"
+          >
+            Se alle produkter →
+          </Link>
+        </div>
 
-          <div className="mt-12 grid gap-10 md:grid-cols-2 md:gap-6">
-            <div className="border-2 border-cream/15 p-8">
-              <Hoodie color="#D9CBAE" className="mx-auto w-3/5 max-w-[220px]" />
-              <p className="mt-6 font-display text-xl uppercase">
-                {GARMENTS[0].name}
-              </p>
-              <p className="mt-1 text-sm text-cream/60">{GARMENTS[0].tagline}</p>
-              <p className="mt-4 font-display text-lg">Fra {GARMENTS[0].price},-</p>
+        <div className="mt-14 grid gap-16 md:grid-cols-2 md:gap-10">
+          <div>
+            <div className="flex items-center justify-center bg-sand/60 py-16">
+              <Hoodie color="#D9CBAE" className="w-2/5 max-w-[220px]" />
             </div>
-            <div className="border-2 border-cream/15 p-8">
-              <Joggebukse color="#232C3D" className="mx-auto w-3/5 max-w-[220px]" />
-              <p className="mt-6 font-display text-xl uppercase">
-                {GARMENTS[1].name}
-              </p>
-              <p className="mt-1 text-sm text-cream/60">{GARMENTS[1].tagline}</p>
-              <p className="mt-4 font-display text-lg">Fra {GARMENTS[1].price},-</p>
+            <p className="mt-6 font-display text-xl">{GARMENTS[0].name}</p>
+            <p className="mt-1 text-sm text-ink/55">{GARMENTS[0].tagline}</p>
+            <p className="mt-3 text-sm">Fra {GARMENTS[0].price},-</p>
+          </div>
+          <div>
+            <div className="flex items-center justify-center bg-sand/60 py-16">
+              <Joggebukse color="#232C3D" className="w-2/5 max-w-[220px]" />
             </div>
+            <p className="mt-6 font-display text-xl">{GARMENTS[1].name}</p>
+            <p className="mt-1 text-sm text-ink/55">{GARMENTS[1].tagline}</p>
+            <p className="mt-3 text-sm">Fra {GARMENTS[1].price},-</p>
           </div>
         </div>
       </section>
 
       {/* DESIGN SELV TEASER */}
-      <section className="container-px grid gap-10 py-16 md:grid-cols-2 md:items-center md:py-24">
-        <div>
-          <p className="eyebrow text-ink/50">Designeren</p>
-          <h2 className="mt-4 font-display text-4xl font-semibold uppercase leading-[0.95] tracking-tightest md:text-5xl">
-            Legg på skolens logo. Se den live. Bestill.
-          </h2>
-          <p className="mt-5 max-w-md text-ink/70">
-            Last opp skolelogoen, velg farge på plagget, og dra logoen dit du
-            vil ha den — bryst, rygg, erme. Du ser akkurat hvordan det blir
-            før du bestiller for klassen.
-          </p>
-          <Button href="/design" variant="primary" className="mt-8">
-            Prøv designeren →
-          </Button>
-        </div>
-        <div className="relative border-2 border-ink bg-paper p-8 shadow-hard">
-          <Hoodie color="#17181B" className="mx-auto w-2/3 max-w-[240px]" />
-          <div className="absolute left-1/2 top-[38%] flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border-2 border-dashed border-lime bg-lime/20 font-display text-[10px] uppercase text-ink">
-            Din logo
+      <section className="border-y border-ink/10 bg-sand/40">
+        <div className="container-px grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
+          <div>
+            <p className="eyebrow text-ink/45">Designeren</p>
+            <h2 className="mt-5 font-display text-4xl leading-[1.05] md:text-5xl">
+              Legg på skolens logo. Se den live. Bestill.
+            </h2>
+            <p className="mt-6 max-w-md text-ink/65">
+              Last opp skolelogoen, velg farge på plagget, og dra logoen dit du
+              vil ha den — bryst, rygg, erme. Du ser akkurat hvordan det blir
+              før du bestiller for klassen.
+            </p>
+            <Button href="/design" variant="primary" className="mt-8">
+              Prøv designeren →
+            </Button>
+          </div>
+          <div className="relative flex items-center justify-center bg-paper py-16">
+            <Hoodie color="#17181B" className="w-1/2 max-w-[220px]" />
+            <div className="absolute left-1/2 top-[42%] flex h-12 w-12 -translate-x-1/2 items-center justify-center rounded-full border border-dashed border-rust/60 font-body text-[9px] uppercase tracking-wide text-rust">
+              Logo
+            </div>
           </div>
         </div>
       </section>
 
-      {/* NULL UTSLIPP TEASER */}
-      <section className="bg-forest text-cream">
-        <div className="container-px flex flex-col gap-8 py-16 md:flex-row md:items-center md:justify-between md:py-24">
+      {/* NULL UTSLIPP */}
+      <section className="bg-ink text-cream">
+        <div className="container-px flex flex-col gap-8 py-20 md:flex-row md:items-center md:justify-between md:py-28">
           <div className="max-w-xl">
-            <p className="eyebrow text-lime">Null utslipp</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold uppercase leading-[0.95] tracking-tightest md:text-5xl">
+            <p className="eyebrow text-cream/45">Null utslipp</p>
+            <h2 className="mt-5 font-display text-4xl italic leading-[1.05] md:text-5xl">
               Kult skal ikke koste kloden.
             </h2>
-            <p className="mt-5 text-cream/75">
+            <p className="mt-6 text-cream/70">
               Vi klimakompenserer alt vi produserer og all frakt vi sender —
               uten at det gjør genseren dyrere for deg.
             </p>
@@ -172,14 +162,14 @@ export default function Home() {
       </section>
 
       {/* OM OSS TEASER */}
-      <section className="container-px py-16 md:py-24">
+      <section className="container-px py-20 md:py-28">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl">
-            <p className="eyebrow text-ink/50">Om oss</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold uppercase leading-[0.95] tracking-tightest md:text-5xl">
+            <p className="eyebrow text-ink/45">Om oss</p>
+            <h2 className="mt-5 font-display text-4xl leading-[1.05] md:text-5xl">
               Startet av to elever, ikke to menn i dress.
             </h2>
-            <p className="mt-5 text-ink/70">
+            <p className="mt-6 text-ink/65">
               Campus Wear er startet av oss to — ikke av et russedress-selskap
               som har solgt de samme genserne i 20 år. Vi vet hva som faktisk
               er kult å ha på seg, fordi vi går på skolen selv.
@@ -192,12 +182,12 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="border-t-2 border-ink bg-lime">
+      <section className="border-t border-ink/10 bg-sand/40">
         <div className="container-px flex flex-col items-start gap-6 py-16 md:flex-row md:items-center md:justify-between md:py-20">
-          <h2 className="font-display text-3xl font-semibold uppercase leading-[0.95] tracking-tightest md:text-5xl">
+          <h2 className="font-display text-3xl italic md:text-5xl">
             Klar for å style klassen?
           </h2>
-          <Button href="/design" variant="dark">
+          <Button href="/design" variant="primary">
             Design din genser →
           </Button>
         </div>

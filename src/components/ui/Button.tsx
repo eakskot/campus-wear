@@ -4,12 +4,10 @@ import type { ReactNode } from "react";
 type Variant = "primary" | "dark" | "ghost" | "ghost-inv";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-lime text-ink border-ink hover:bg-ink hover:text-lime",
-  dark: "bg-ink text-cream border-ink hover:bg-lime hover:text-ink",
-  ghost: "bg-transparent text-ink border-ink hover:bg-ink hover:text-cream",
-  "ghost-inv":
-    "bg-transparent text-cream border-cream hover:bg-cream hover:text-ink",
+  primary: "border-ink bg-ink text-cream hover:bg-transparent hover:text-ink",
+  dark: "border-ink bg-ink text-cream hover:bg-transparent hover:text-ink",
+  ghost: "border-ink/30 bg-transparent text-ink hover:border-ink",
+  "ghost-inv": "border-cream/40 bg-transparent text-cream hover:border-cream",
 };
 
 export default function Button({
@@ -27,7 +25,7 @@ export default function Button({
   type?: "button" | "submit";
   className?: string;
 }) {
-  const classes = `inline-flex items-center justify-center gap-2 border-2 px-6 py-3 font-display text-sm uppercase tracking-wide shadow-hard-sm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ${variants[variant]} ${className}`;
+  const classes = `inline-flex items-center justify-center gap-2 border px-6 py-3 font-body text-[13px] uppercase tracking-[0.12em] transition duration-200 ${variants[variant]} ${className}`;
 
   if (href) {
     return (

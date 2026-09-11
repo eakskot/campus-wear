@@ -3,6 +3,9 @@
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 
+const fieldClasses =
+  "border border-ink/20 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-ink";
+
 export default function ContactForm() {
   const [name, setName] = useState("");
   const [school, setSchool] = useState("");
@@ -27,16 +30,13 @@ export default function ContactForm() {
   };
 
   return (
-    <form
-      onSubmit={submit}
-      className="flex flex-col gap-4 border-2 border-ink p-6 shadow-hard md:p-8"
-    >
+    <form onSubmit={submit} className="flex flex-col gap-4 bg-sand/40 p-6 md:p-10">
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Navn"
         required
-        className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+        className={fieldClasses}
       />
       <input
         value={email}
@@ -44,19 +44,19 @@ export default function ContactForm() {
         type="email"
         placeholder="E-post"
         required
-        className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+        className={fieldClasses}
       />
       <input
         value={school}
         onChange={(e) => setSchool(e.target.value)}
         placeholder="Skole"
         required
-        className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+        className={fieldClasses}
       />
       <select
         value={role}
         onChange={(e) => setRole(e.target.value)}
-        className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+        className={fieldClasses}
       >
         <option>Elev / elevråd</option>
         <option>Lærer / ansatt</option>
@@ -69,12 +69,12 @@ export default function ContactForm() {
         placeholder="Fortell oss hva dere trenger"
         rows={5}
         required
-        className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+        className={fieldClasses}
       />
       <Button type="submit" variant="primary" className="w-full">
         Send henvendelse →
       </Button>
-      <p className="text-xs text-ink/50">
+      <p className="text-xs text-ink/45">
         Åpner en ferdigutfylt e-post i din e-postklient.
       </p>
     </form>

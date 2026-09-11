@@ -9,17 +9,17 @@ export const metadata: Metadata = {
 
 export default function DesignPage() {
   return (
-    <section className="container-px pb-20 pt-14 md:pt-20">
-      <p className="eyebrow text-ink/50">Designeren</p>
-      <h1 className="mt-4 max-w-2xl font-display text-4xl font-semibold uppercase leading-[0.95] tracking-tightest md:text-6xl">
+    <section className="container-px pb-24 pt-16 md:pt-24">
+      <p className="eyebrow text-ink/45">Designeren</p>
+      <h1 className="mt-5 max-w-2xl font-display text-4xl leading-[1.05] md:text-6xl">
         Din skole. Din logo. Din stil.
       </h1>
-      <p className="mt-5 max-w-lg text-ink/70">
+      <p className="mt-6 max-w-lg text-ink/65">
         Velg plagg og farge, last opp skolens logo (eller skriv navnet), og
         dra den dit du vil ha den.
       </p>
 
-      <div className="mt-12">
+      <div className="mt-16">
         <Suspense fallback={null}>
           <Configurator />
         </Suspense>

@@ -5,36 +5,28 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0D1B34",
-        cream: "#F5F1E8",
-        paper: "#FBF9F4",
-        lime: "#FF7A29",
-        limedark: "#C2410C",
-        forest: "#0A2647",
+        ink: "#232F42",
+        cream: "#F7F4EC",
+        paper: "#FCFBF7",
+        sand: "#E7E0D0",
+        rust: "#AC4F24",
+        rustdark: "#8A3E1B",
       },
       fontFamily: {
         display: ["var(--font-display)"],
         body: ["var(--font-body)"],
       },
       letterSpacing: {
-        tightest: "-0.045em",
-      },
-      boxShadow: {
-        hard: "6px 6px 0 0 rgba(16,16,18,1)",
-        "hard-sm": "4px 4px 0 0 rgba(16,16,18,1)",
-        "hard-inv": "6px 6px 0 0 rgba(245,241,232,1)",
-      },
-      backgroundImage: {
-        grain: "url('/grain.svg')",
+        tightest: "-0.03em",
       },
       keyframes: {
-        marquee: {
-          "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-50%)" },
+        fade: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
       },
       animation: {
-        marquee: "marquee 28s linear infinite",
+        fade: "fade 0.6s ease-out both",
       },
     },
   },

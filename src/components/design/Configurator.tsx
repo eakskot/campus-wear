@@ -22,6 +22,14 @@ const GARMENT_COMPONENT = {
   joggebukse: Joggebukse,
 } as const;
 
+const fieldClasses =
+  "border border-ink/20 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-ink";
+
+const chipClasses = (active: boolean) =>
+  `border px-4 py-2 font-body text-xs uppercase tracking-[0.1em] transition ${
+    active ? "border-ink bg-ink text-cream" : "border-ink/25 text-ink/70 hover:border-ink"
+  }`;
+
 export default function Configurator() {
   const params = useSearchParams();
   const initialGarment = (params.get("garment") as GarmentType) || "hoodie";
@@ -127,7 +135,7 @@ export default function Configurator() {
   };
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+    <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
       {/* STAGE */}
       <div>
         <div className="flex gap-2">
@@ -135,9 +143,7 @@ export default function Configurator() {
             <button
               key={g.id}
               onClick={() => setGarmentType(g.id)}
-              className={`border-2 border-ink px-4 py-2 font-display text-xs uppercase tracking-wide transition ${
-                garmentType === g.id ? "bg-ink text-cream" : "bg-transparent"
-              }`}
+              className={chipClasses(garmentType === g.id)}
             >
               {g.name}
             </button>
@@ -146,9 +152,9 @@ export default function Configurator() {
 
         <div
           ref={stageRef}
-          className="relative mt-4 aspect-[5/6] w-full touch-none select-none border-2 border-ink bg-paper"
+          className="relative mt-5 aspect-[5/6] w-full touch-none select-none bg-sand/40"
         >
-          <div className="absolute inset-0 flex items-center justify-center p-6">
+          <div className="absolute inset-0 flex items-center justify-center p-8">
             <Illustration color={color.hex} className="h-full w-full" />
           </div>
 
@@ -163,7 +169,7 @@ export default function Configurator() {
                 width: `${logoBoxSize}px`,
                 height: `${logoBoxSize}px`,
               }}
-              className="absolute flex -translate-x-1/2 -translate-y-1/2 cursor-grab items-center justify-center overflow-hidden rounded-sm border-2 border-dashed border-lime bg-lime/10 active:cursor-grabbing"
+              className="absolute flex -translate-x-1/2 -translate-y-1/2 cursor-grab items-center justify-center overflow-hidden border border-dashed border-rust bg-rust/10 active:cursor-grabbing"
             >
               {logoMode === "upload" && logoUrl ? (
                 <img
@@ -172,29 +178,29 @@ export default function Configurator() {
                   className="pointer-events-none h-full w-full object-contain p-1"
                 />
               ) : (
-                <span className="pointer-events-none px-1 text-center font-display text-[11px] font-bold uppercase leading-none text-ink">
+                <span className="pointer-events-none px-1 text-center font-body text-[11px] font-semibold uppercase leading-none text-ink">
                   {initials || "SKOLE"}
                 </span>
               )}
             </div>
           )}
         </div>
-        <p className="mt-2 text-xs text-ink/50">
+        <p className="mt-3 text-xs text-ink/45">
           Dra logoen dit du vil ha den. Bruk størrelse-glideren for å skalere.
         </p>
 
-        <div className="mt-6">
-          <p className="eyebrow text-ink/50">Farge</p>
+        <div className="mt-7">
+          <p className="eyebrow text-ink/45">Farge</p>
           <div className="mt-2 flex gap-2">
             {COLORS.map((c) => (
               <button
                 key={c.name}
                 aria-label={c.name}
                 onClick={() => setColor(c)}
-                className={`h-8 w-8 rounded-full border-2 transition ${
+                className={`h-7 w-7 rounded-full border transition ${
                   color.name === c.name
-                    ? "border-ink ring-2 ring-lime ring-offset-2"
-                    : "border-ink/30"
+                    ? "border-ink ring-1 ring-rust ring-offset-2 ring-offset-cream"
+                    : "border-ink/20"
                 }`}
                 style={{ backgroundColor: c.hex }}
               />
@@ -204,31 +210,27 @@ export default function Configurator() {
       </div>
 
       {/* CONTROLS */}
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-9">
         <div>
-          <p className="eyebrow text-ink/50">1. Logo</p>
+          <p className="eyebrow text-ink/45">1. Logo</p>
           <div className="mt-3 flex gap-2">
             <button
               onClick={() => setLogoMode("upload")}
-              className={`border-2 border-ink px-4 py-2 font-display text-xs uppercase tracking-wide ${
-                logoMode === "upload" ? "bg-ink text-cream" : ""
-              }`}
+              className={chipClasses(logoMode === "upload")}
             >
               Last opp logo
             </button>
             <button
               onClick={() => setLogoMode("initials")}
-              className={`border-2 border-ink px-4 py-2 font-display text-xs uppercase tracking-wide ${
-                logoMode === "initials" ? "bg-ink text-cream" : ""
-              }`}
+              className={chipClasses(logoMode === "initials")}
             >
               Bruk tekst
             </button>
           </div>
 
           {logoMode === "upload" ? (
-            <label className="mt-3 flex cursor-pointer flex-col items-start gap-1 border-2 border-dashed border-ink/30 px-4 py-4">
-              <span className="font-display text-xs uppercase tracking-wide">
+            <label className="mt-3 flex cursor-pointer flex-col items-start gap-1 border border-dashed border-ink/25 px-4 py-4 transition hover:border-ink/50">
+              <span className="font-body text-xs uppercase tracking-[0.1em] text-ink/70">
                 {logoName || "Velg fil (PNG/SVG med gjennomsiktig bunn)"}
               </span>
               <input
@@ -243,13 +245,13 @@ export default function Configurator() {
               value={initials}
               onChange={(e) => setInitials(e.target.value.toUpperCase().slice(0, 8))}
               placeholder="F.eks. ASK VGS"
-              className="mt-3 w-full border-2 border-ink/30 px-4 py-3 font-display text-sm uppercase tracking-wide outline-none focus:border-ink"
+              className={`mt-3 w-full ${fieldClasses} font-body uppercase tracking-[0.08em]`}
             />
           )}
         </div>
 
         <div>
-          <p className="eyebrow text-ink/50">2. Plassering</p>
+          <p className="eyebrow text-ink/45">2. Plassering</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {PRESETS.map((p) => (
               <button
@@ -258,13 +260,13 @@ export default function Configurator() {
                   setPos(p.pos);
                   setScale(p.scale);
                 }}
-                className="border-2 border-ink/30 px-3 py-2 text-xs font-medium uppercase tracking-wide hover:border-ink"
+                className="border border-ink/20 px-3 py-2 text-xs text-ink/70 transition hover:border-ink hover:text-ink"
               >
                 {p.label}
               </button>
             ))}
           </div>
-          <label className="mt-4 block text-xs uppercase tracking-wide text-ink/50">
+          <label className="mt-5 block text-xs uppercase tracking-wide text-ink/45">
             Størrelse på trykk
           </label>
           <input
@@ -274,42 +276,42 @@ export default function Configurator() {
             step={0.05}
             value={scale}
             onChange={(e) => setScale(parseFloat(e.target.value))}
-            className="mt-2 w-full accent-lime"
+            className="mt-2 w-full accent-rust"
           />
         </div>
 
         <div>
-          <p className="eyebrow text-ink/50">3. Bestilling</p>
+          <p className="eyebrow text-ink/45">3. Bestilling</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Navn"
-              className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+              className={fieldClasses}
             />
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="E-post"
               type="email"
-              className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+              className={fieldClasses}
             />
             <input
               value={school}
               onChange={(e) => setSchool(e.target.value)}
               placeholder="Skole"
-              className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+              className={fieldClasses}
             />
             <input
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
               placeholder="Klasse/trinn"
-              className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+              className={fieldClasses}
             />
             <select
               value={size}
               onChange={(e) => setSize(e.target.value)}
-              className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+              className={fieldClasses}
             >
               {SIZES.map((s) => (
                 <option key={s} value={s}>
@@ -323,32 +325,28 @@ export default function Configurator() {
               type="number"
               min={1}
               placeholder="Antall"
-              className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink"
+              className={fieldClasses}
             />
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Kommentar (valgfritt)"
               rows={3}
-              className="border-2 border-ink/30 px-4 py-3 text-sm outline-none focus:border-ink sm:col-span-2"
+              className={`${fieldClasses} sm:col-span-2`}
             />
           </div>
 
-          <div className="mt-4 flex items-baseline justify-between border-t border-ink/15 pt-4">
-            <span className="text-sm text-ink/60">Pris</span>
-            <span className="font-display text-2xl font-semibold">
+          <div className="mt-5 flex items-baseline justify-between border-t border-ink/10 pt-5">
+            <span className="text-sm text-ink/55">Pris</span>
+            <span className="font-display text-2xl">
               {garmentInfo.price * qty},-
             </span>
           </div>
 
-          <Button
-            onClick={sendOrder}
-            variant="primary"
-            className="mt-4 w-full"
-          >
+          <Button onClick={sendOrder} variant="primary" className="mt-5 w-full">
             Send bestilling →
           </Button>
-          <p className="mt-2 text-xs text-ink/50">
+          <p className="mt-3 text-xs text-ink/45">
             Åpner en ferdigutfylt e-post til oss. Betaling og bekreftelse
             ordner vi over e-post/skoledugnad, akkurat som med russedress —
             bare billigere.
