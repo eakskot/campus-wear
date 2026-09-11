@@ -76,7 +76,7 @@ export default function Home() {
             body: "Vi klimakompenserer 100 % av produksjon og frakt på alt vi sender. Kulere klær skal ikke koste mer enn nødvendig for planeten heller.",
           },
         ].map((item) => (
-          <div key={item.n} className="py-12 first:pt-0 md:px-12 md:py-20 md:first:pl-0 md:last:pr-0">
+          <div key={item.n} className="py-12 max-md:first:pt-0 md:px-12 md:py-20 md:first:pl-0 md:last:pr-0">
             <p className="font-display text-sm italic text-ink/35">{item.n}</p>
             <h3 className="mt-3 font-display text-2xl">{item.title}</h3>
             <p className="mt-3 text-sm leading-relaxed text-ink/60">{item.body}</p>

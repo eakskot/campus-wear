@@ -68,6 +68,8 @@ export default function ProductCard({ garment }: { garment: Garment }) {
           </div>
         </div>
 
+        <div className="flex-1" />
+
         <Button
           href={`/design?garment=${garment.id}&color=${encodeURIComponent(color.hex)}`}
           variant="primary"
