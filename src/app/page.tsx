@@ -57,7 +57,7 @@ export default function Home() {
 
         <div className="relative flex items-center justify-center">
           <div className="absolute -inset-6 -z-10 border-2 border-ink/10 md:inset-8" />
-          <Hoodie color="#17181B" className="w-3/4 max-w-sm drop-shadow-[8px_10px_0_rgba(16,16,18,0.12)]" />
+          <Hoodie color="#17181B" className="w-3/4 max-w-sm drop-shadow-[8px_10px_0_rgba(13,27,52,0.12)]" />
         </div>
       </section>
 

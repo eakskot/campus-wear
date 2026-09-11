@@ -5,13 +5,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#101012",
+        ink: "#0D1B34",
         cream: "#F5F1E8",
         paper: "#FBF9F4",
-        lime: "#CBFF4D",
-        limedark: "#9FDA1E",
-        forest: "#16352A",
-        clay: "#FF5A36",
+        lime: "#FF7A29",
+        limedark: "#C2410C",
+        forest: "#0A2647",
       },
       fontFamily: {
         display: ["var(--font-display)"],
