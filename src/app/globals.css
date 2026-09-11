@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #fbf9f4;
+    color: #101012;
+  }
+
+  ::selection {
+    background-color: #cbff4d;
+    color: #101012;
+  }
+}
+
+@layer utilities {
+  .container-px {
+    @apply px-6 md:px-10 lg:px-14;
+  }
+
+  .hairline {
+    @apply border-ink/15;
+  }
+
+  .hairline-inv {
+    @apply border-cream/20;
+  }
+
+  .eyebrow {
+    @apply font-display text-xs md:text-sm uppercase tracking-[0.2em] font-medium;
+  }
+}
