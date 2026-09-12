@@ -60,6 +60,11 @@ export default function HoodieHero() {
     if (!canvas || !list) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    // Canvas defaults to low-quality (nearest-neighbour-ish) scaling in
+    // most browsers regardless of source resolution — without this, even
+    // a sharp source frame comes out soft once drawImage scales it.
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
     const idx = Math.min(list.length - 1, Math.floor(progress * list.length));
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(list[idx], 0, 0, canvas.width, canvas.height);
@@ -68,13 +73,18 @@ export default function HoodieHero() {
   // Set up canvas resolution and paint the first frame as soon as the
   // sequence has loaded, so there's something on screen before the user
   // has scrolled at all (and so reduced-motion visitors get a static shot
-  // instead of nothing).
+  // instead of nothing). Sized to the element's actual on-screen size (not
+  // just the source frame's own resolution) so it's never upscaled a
+  // second time by CSS on large screens.
   useEffect(() => {
     if (!frames || !canvasRef.current) return;
     const canvas = canvasRef.current;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = FRAME_W * dpr;
-    canvas.height = FRAME_H * dpr;
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.max(rect.width, FRAME_W);
+    const h = Math.max(rect.height, FRAME_H);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
     drawSpinFrame(0);
   }, [frames]);
 
