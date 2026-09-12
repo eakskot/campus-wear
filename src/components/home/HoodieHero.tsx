@@ -11,10 +11,13 @@ import { useSpinFrames } from "@/lib/useSpinFrames";
 const SPIN_FRAME_COUNT = 24;
 const SPIN_BASE_PATH = "/hoodie-spin";
 
-// Native size of the extracted frames (portrait product shot) — used to
-// size the canvas buffer and keep its aspect ratio on screen.
-const FRAME_W = 560;
-const FRAME_H = 996;
+// Canvas buffer size — matches frame-01's native resolution (the frame
+// shown before any scrolling happens, so it's worth keeping sharp). The
+// other 23 frames are compressed smaller for file size, but drawImage
+// scales them up into this same buffer just fine; the very minor upscale
+// is not noticeable once a garment is already spinning past.
+const FRAME_W = 720;
+const FRAME_H = 1280;
 
 /**
  * Full-bleed hero, same treatment at every screen size: the hoodie fills
@@ -44,7 +47,6 @@ export default function HoodieHero() {
   const topRef = useRef<HTMLHeadingElement>(null);
   const bottomRef = useRef<HTMLHeadingElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
-  const tagsRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -123,9 +125,6 @@ export default function HoodieHero() {
 
       if (hintRef.current) {
         hintRef.current.style.opacity = `${Math.max(0, 1 - progress * 5)}`;
-      }
-      if (tagsRef.current) {
-        tagsRef.current.style.opacity = `${Math.max(0, 1 - progress * 3)}`;
       }
       if (bgRef.current) {
         bgRef.current.style.opacity = `${Math.max(0, 1 - progress * 0.7)}`;
@@ -211,18 +210,6 @@ export default function HoodieHero() {
           >
             Wear
           </h2>
-        </div>
-
-        <div
-          ref={tagsRef}
-          className="pointer-events-none absolute inset-x-6 bottom-10 flex justify-between md:inset-x-10"
-        >
-          <p className="max-w-[8.5rem] font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-ink/50 md:text-[11px]">
-            Klær for mer enn skolen
-          </p>
-          <p className="max-w-[8.5rem] text-right font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-ink/50 md:text-[11px]">
-            Samme skole. Ny stil.
-          </p>
         </div>
 
         <div
