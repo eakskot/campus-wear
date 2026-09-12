@@ -11,13 +11,19 @@ import { useSpinFrames } from "@/lib/useSpinFrames";
 const SPIN_FRAME_COUNT = 24;
 const SPIN_BASE_PATH = "/hoodie-spin";
 
+// Native size of the extracted frames (portrait product shot) — used to
+// size the canvas buffer and keep its aspect ratio on screen.
+const FRAME_W = 560;
+const FRAME_H = 996;
+
 /**
- * Full-bleed dark hero: "CAMPUS" / "WEAR" in huge block letters either
- * side of a floating zip hoodie. The section is taller than the viewport
- * (extra scroll runway) and pinned with `sticky` while that runway scrolls
- * past — we read scroll progress across that runway and use it to float
- * the hoodie upward and fade the letters apart, then the rest of the page
- * takes over normally once the runway is exhausted.
+ * Full-bleed hero: "CAMPUS" / "WEAR" in huge block letters either side of
+ * a floating zip hoodie, on a soft warm beige backdrop matching the
+ * product shot. The section is taller than the viewport (extra scroll
+ * runway) and pinned with `sticky` while that runway scrolls past — we
+ * read scroll progress across that runway and use it to float the hoodie
+ * upward and fade the letters apart, then the rest of the page takes over
+ * normally once the runway is exhausted.
  */
 export default function HoodieHero() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -52,9 +58,8 @@ export default function HoodieHero() {
     if (!frames || !canvasRef.current) return;
     const canvas = canvasRef.current;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const size = 900;
-    canvas.width = size * dpr;
-    canvas.height = size * dpr;
+    canvas.width = FRAME_W * dpr;
+    canvas.height = FRAME_H * dpr;
     drawSpinFrame(0);
   }, [frames]);
 
@@ -130,13 +135,13 @@ export default function HoodieHero() {
 
   return (
     <section ref={wrapRef} className="relative h-[180vh]">
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#0A0D14]">
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#C7BEB0]">
         <div
           ref={bgRef}
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 50% at 50% 38%, rgba(130,150,180,0.16), transparent 70%), radial-gradient(70% 55% at 15% 95%, rgba(90,100,120,0.14), transparent 70%), radial-gradient(70% 55% at 88% 95%, rgba(90,100,120,0.12), transparent 70%)",
+              "radial-gradient(65% 55% at 50% 42%, rgba(224,217,202,0.9), transparent 70%), radial-gradient(90% 70% at 50% 100%, rgba(178,169,153,0.5), transparent 70%)",
           }}
         />
 
@@ -144,13 +149,13 @@ export default function HoodieHero() {
           <div className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-between px-3 md:px-10">
             <h2
               ref={leftRef}
-              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,13vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-cream"
+              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,13vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink"
             >
               Campus
             </h2>
             <h2
               ref={rightRef}
-              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,13vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-cream"
+              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,13vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink"
             >
               Wear
             </h2>
@@ -163,13 +168,14 @@ export default function HoodieHero() {
             {frames ? (
               <canvas
                 ref={canvasRef}
-                className="aspect-square w-[62vw] max-w-[420px] drop-shadow-[0_50px_60px_rgba(0,0,0,0.55)]"
+                style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
+                className="h-[62vh] max-h-[640px] w-auto drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
               />
             ) : (
               <div className="w-[52vw] max-w-[360px] animate-float">
                 <ZipHoodie
                   color="#1C2740"
-                  className="w-full drop-shadow-[0_50px_60px_rgba(0,0,0,0.55)]"
+                  className="w-full drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
                 />
               </div>
             )}
@@ -179,10 +185,10 @@ export default function HoodieHero() {
             ref={tagsRef}
             className="pointer-events-none absolute inset-x-6 bottom-10 flex justify-between md:inset-x-10"
           >
-            <p className="max-w-[8.5rem] font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-cream/45 md:text-[11px]">
+            <p className="max-w-[8.5rem] font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-ink/50 md:text-[11px]">
               Klær for mer enn skolen
             </p>
-            <p className="max-w-[8.5rem] text-right font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-cream/45 md:text-[11px]">
+            <p className="max-w-[8.5rem] text-right font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-ink/50 md:text-[11px]">
               Samme skole. Ny stil.
             </p>
           </div>
@@ -191,10 +197,10 @@ export default function HoodieHero() {
             ref={hintRef}
             className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
           >
-            <span className="font-body text-[10px] uppercase tracking-[0.25em] text-cream/45">
+            <span className="font-body text-[10px] uppercase tracking-[0.25em] text-ink/50">
               Scroll
             </span>
-            <span className="h-8 w-px bg-cream/25" />
+            <span className="h-8 w-px bg-ink/30" />
           </div>
         </div>
       </div>
