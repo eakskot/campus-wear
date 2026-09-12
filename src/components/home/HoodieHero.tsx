@@ -39,7 +39,9 @@ export default function HoodieHero() {
         scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
 
       if (hoodieRef.current) {
-        hoodieRef.current.style.transform = `translateY(${-progress * 280}px) scale(${1 - progress * 0.1})`;
+        const rotateY = progress * 34; // turns away as it rises
+        const rotateZ = Math.sin(progress * Math.PI) * 7; // tilts one way then settles
+        hoodieRef.current.style.transform = `perspective(1000px) translateY(${-progress * 280}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale(${1 - progress * 0.1})`;
         hoodieRef.current.style.opacity = `${Math.max(0, 1 - progress * 1.4)}`;
       }
       if (leftRef.current) {

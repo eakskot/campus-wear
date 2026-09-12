@@ -25,13 +25,13 @@ const config: Config = {
           "100%": { opacity: "1" },
         },
         float: {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-16px)" },
+          "0%, 100%": { transform: "translateY(0px) rotate(-2deg)" },
+          "50%": { transform: "translateY(-16px) rotate(2deg)" },
         },
       },
       animation: {
         fade: "fade 0.6s ease-out both",
-        float: "float 5s ease-in-out infinite",
+        float: "float 6s ease-in-out infinite",
       },
     },
   },
