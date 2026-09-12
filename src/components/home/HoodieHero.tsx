@@ -17,17 +17,20 @@ const FRAME_W = 560;
 const FRAME_H = 996;
 
 /**
- * Full-bleed hero on a soft warm beige backdrop matching the product shot.
- * Desktop: "CAMPUS" / "WEAR" flank a floating zip hoodie at mid-height.
- * Mobile: there's no room to flank anything, so the words stack directly
- * above the (much bigger) hoodie instead, and the whole thing fills the
- * true mobile viewport height (`dvh`, not `vh`, so it isn't left short by
- * the browser's address bar).
+ * Full-bleed hero, same treatment at every screen size: the hoodie fills
+ * the whole screen top to bottom (no card/box with visible background
+ * around it), and "Campus Wear" is stamped directly on the garment's
+ * chest instead of floating beside or above it. On narrow (portrait)
+ * screens the photo is cropped at the sides to cover edge-to-edge; on
+ * wide (landscape) screens it's sized to the full height instead, so it
+ * never has to crop the top/bottom of the garment off.
  *
- * The hoodie itself (canvas + fallback) is rendered exactly once and just
- * repositioned responsively — rendering it twice (once per layout) would
- * mean two <canvas> elements fighting over one ref, and only one of them
- * ever actually getting pixels drawn into it.
+ * The nav is transparent while it overlaps this hero (see Nav.tsx) — this
+ * component pulls itself up by the nav's own height (`-mt`) so the hero
+ * actually starts at the very top of the screen instead of leaving the
+ * page background exposed in a strip above it, which is what a plain
+ * `sticky` nav would otherwise do (it still occupies its row in normal
+ * flow even while "transparent").
  *
  * The section is taller than the viewport (extra scroll runway) and
  * pinned with `sticky` while that runway scrolls past — we read scroll
@@ -38,10 +41,8 @@ const FRAME_H = 996;
 export default function HoodieHero() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const hoodieRef = useRef<HTMLDivElement>(null);
-  const leftRef = useRef<HTMLHeadingElement>(null);
-  const rightRef = useRef<HTMLHeadingElement>(null);
-  const mobileTopRef = useRef<HTMLHeadingElement>(null);
-  const mobileBottomRef = useRef<HTMLHeadingElement>(null);
+  const topRef = useRef<HTMLHeadingElement>(null);
+  const bottomRef = useRef<HTMLHeadingElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
   const tagsRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -110,24 +111,14 @@ export default function HoodieHero() {
 
       const letterOpacity = `${Math.max(0, 1 - progress * 1.6)}`;
 
-      // Desktop: words part sideways.
-      if (leftRef.current) {
-        leftRef.current.style.transform = `translateX(${-progress * 70}px)`;
-        leftRef.current.style.opacity = letterOpacity;
+      // Words part vertically — "Campus" drifts up, "Wear" drifts down.
+      if (topRef.current) {
+        topRef.current.style.transform = `translateY(${-progress * 30}px)`;
+        topRef.current.style.opacity = letterOpacity;
       }
-      if (rightRef.current) {
-        rightRef.current.style.transform = `translateX(${progress * 70}px)`;
-        rightRef.current.style.opacity = letterOpacity;
-      }
-      // Mobile: words stack above the hoodie, so they part vertically
-      // instead — "Campus" drifts up, "Wear" drifts down.
-      if (mobileTopRef.current) {
-        mobileTopRef.current.style.transform = `translateY(${-progress * 30}px)`;
-        mobileTopRef.current.style.opacity = letterOpacity;
-      }
-      if (mobileBottomRef.current) {
-        mobileBottomRef.current.style.transform = `translateY(${progress * 18}px)`;
-        mobileBottomRef.current.style.opacity = letterOpacity;
+      if (bottomRef.current) {
+        bottomRef.current.style.transform = `translateY(${progress * 18}px)`;
+        bottomRef.current.style.opacity = letterOpacity;
       }
 
       if (hintRef.current) {
@@ -158,7 +149,7 @@ export default function HoodieHero() {
   }, []);
 
   return (
-    <section ref={wrapRef} className="relative h-[180dvh]">
+    <section ref={wrapRef} className="relative -mt-[76px] h-[180dvh] md:-mt-24">
       <div className="sticky top-0 h-dvh w-full overflow-hidden bg-[#C0B7AB]">
         {/* Matches the product photo's own vertical vignette (sampled
             from its edges: darker near the top/bottom, lighter in the
@@ -173,71 +164,50 @@ export default function HoodieHero() {
           }}
         />
 
-        {/* DESKTOP: words flank the hoodie at mid-height. Each half is
-            pinned by padding to a fixed distance from the exact center —
-            not by hugging the outer viewport edge. That's what keeps the
-            gap around the hoodie symmetric no matter how much wider
-            "Campus" is than "Wear"; otherwise the shorter word always
-            ends up looking too far out. */}
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 hidden -translate-y-1/2 items-center md:flex">
-          <div className="flex min-w-0 flex-1 justify-end pr-[12vw]">
-            <h2
-              ref={leftRef}
-              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,11vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink"
-            >
-              Campus
-            </h2>
-          </div>
-          <div className="flex min-w-0 flex-1 justify-start pl-[12vw]">
-            <h2
-              ref={rightRef}
-              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,11vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink"
-            >
-              Wear
-            </h2>
-          </div>
-        </div>
-
-        {/* Hoodie: rendered once. On mobile it's full-bleed — cropped with
-            object-cover to fill the entire screen edge to edge, no visible
-            card/box around it. On desktop it's a smaller centered image
-            flanked by the words instead. */}
+        {/* Hoodie: rendered once. On narrow/portrait screens it's
+            full-bleed — cropped with object-cover to fill the entire
+            screen edge to edge. On wide/landscape screens (where a
+            portrait photo can't cover both dimensions without an absurd
+            zoom) it's sized to the full height instead and centered, so
+            the whole garment always stays in frame. Either way there's no
+            inset card with visible background padding around it. */}
         <div
           ref={hoodieRef}
-          className="pointer-events-none absolute inset-0 md:flex md:items-center md:justify-center"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
         >
           {frames ? (
             <canvas
               ref={canvasRef}
               style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
-              className="absolute inset-0 h-full w-full object-cover md:static md:inset-auto md:h-[62vh] md:max-h-[640px] md:w-auto md:object-contain md:drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
+              className="absolute inset-0 h-full w-full object-cover md:static md:inset-auto md:h-full md:w-auto md:object-contain"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center md:static md:inset-auto md:w-[52vw] md:max-w-[360px]">
+            <div className="absolute inset-0 flex items-center justify-center md:static md:inset-auto">
               <ZipHoodie
                 color="#1C2740"
-                className="w-[70vw] max-w-[280px] animate-float md:w-full md:drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
+                className="h-[90vh] w-auto animate-float md:h-[85vh]"
               />
             </div>
           )}
         </div>
 
-        {/* MOBILE: "Campus Wear" stamped directly on the garment's chest,
-            not floating above it in empty space. Positioned by percentage
-            so it lands on the chest regardless of screen height, since
-            object-cover crops the sides but keeps the full vertical
-            extent of the photo (so a % position always matches the same
-            spot on the actual garment). */}
-        <div className="pointer-events-none absolute inset-x-0 top-[60%] flex flex-col items-center leading-[0.85] md:hidden">
+        {/* "Campus Wear" stamped directly on the garment's chest, not
+            floating beside or above it in empty space. Positioned by
+            percentage so it lands on the chest regardless of screen size:
+            on portrait screens object-cover crops the sides but keeps the
+            full vertical extent of the photo, and on landscape screens
+            the photo is simply shown at full height — either way a %
+            position always matches the same spot on the actual garment. */}
+        <div className="pointer-events-none absolute inset-x-0 top-[60%] flex flex-col items-center leading-[0.85]">
           <h2
-            ref={mobileTopRef}
-            className="select-none font-body text-[15vw] font-black uppercase tracking-tighter text-cream"
+            ref={topRef}
+            className="select-none font-body text-[clamp(2rem,9vh,5.5rem)] font-black uppercase tracking-tighter text-cream"
           >
             Campus
           </h2>
           <h2
-            ref={mobileBottomRef}
-            className="select-none font-body text-[15vw] font-black uppercase tracking-tighter text-cream"
+            ref={bottomRef}
+            className="select-none font-body text-[clamp(2rem,9vh,5.5rem)] font-black uppercase tracking-tighter text-cream"
           >
             Wear
           </h2>
