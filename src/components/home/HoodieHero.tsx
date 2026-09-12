@@ -160,18 +160,14 @@ export default function HoodieHero() {
   return (
     <section ref={wrapRef} className="relative -mt-[76px] h-[180dvh] md:-mt-24">
       <div className="sticky top-0 h-dvh w-full overflow-hidden bg-[#C4BCB0]">
-        {/* Soft radial studio-backdrop vignette (lighter warm cream in the
-            middle, fading to a warm greige at the edges/corners) so the
-            hoodie photo's own backdrop blends into the page — this mainly
-            shows on desktop, where the photo is letterboxed rather than
+        {/* Studio-backdrop photo (soft warm vignette) so the hoodie
+            photo's own backdrop blends into the page — this mainly shows
+            on desktop, where the photo is letterboxed rather than
             full-bleed. */}
         <div
           ref={bgRef}
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 75% 65% at 50% 46%, #DEDACE 0%, #D0C9BC 45%, #B9B1A4 100%)",
-          }}
+          className="pointer-events-none absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url(/hero-bg.webp)" }}
         />
 
         {/* Hoodie: rendered once. On narrow/portrait screens it's
