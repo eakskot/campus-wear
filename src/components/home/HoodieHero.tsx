@@ -2,6 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import ZipHoodie from "@/components/garments/ZipHoodie";
+import { useSpinFrames } from "@/lib/useSpinFrames";
+
+// Drop a 24-frame 360° turntable sequence into public/hoodie-spin/ named
+// frame-01.webp … frame-24.webp (15° apart, fixed camera, consistent
+// lighting/crop) and this hero switches from the CSS-turn fallback to a
+// real scroll-scrubbed spin automatically — no code changes needed.
+const SPIN_FRAME_COUNT = 24;
+const SPIN_BASE_PATH = "/hoodie-spin";
 
 /**
  * Full-bleed dark hero: "CAMPUS" / "WEAR" in huge block letters either
@@ -19,6 +27,36 @@ export default function HoodieHero() {
   const hintRef = useRef<HTMLDivElement>(null);
   const tagsRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const frames = useSpinFrames(SPIN_BASE_PATH, SPIN_FRAME_COUNT);
+  const framesRef = useRef<HTMLImageElement[] | null>(null);
+  framesRef.current = frames;
+
+  const drawSpinFrame = (progress: number) => {
+    const canvas = canvasRef.current;
+    const list = framesRef.current;
+    if (!canvas || !list) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const idx = Math.min(list.length - 1, Math.floor(progress * list.length));
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(list[idx], 0, 0, canvas.width, canvas.height);
+  };
+
+  // Set up canvas resolution and paint the first frame as soon as the
+  // sequence has loaded, so there's something on screen before the user
+  // has scrolled at all (and so reduced-motion visitors get a static shot
+  // instead of nothing).
+  useEffect(() => {
+    if (!frames || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const size = 900;
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    drawSpinFrame(0);
+  }, [frames]);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia(
@@ -38,11 +76,19 @@ export default function HoodieHero() {
       const progress =
         scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
 
+      const usingRealSpin = !!framesRef.current;
+
       if (hoodieRef.current) {
-        const rotateY = progress * 34; // turns away as it rises
-        const rotateZ = Math.sin(progress * Math.PI) * 7; // tilts one way then settles
-        hoodieRef.current.style.transform = `perspective(1000px) translateY(${-progress * 280}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale(${1 - progress * 0.1})`;
+        // Real frames already carry the rotation, so just let them float
+        // up. The CSS fallback fakes the turn with a 3D-ish transform.
+        const turn = usingRealSpin
+          ? ""
+          : `rotateY(${progress * 34}deg) rotateZ(${Math.sin(progress * Math.PI) * 7}deg) `;
+        hoodieRef.current.style.transform = `perspective(1000px) translateY(${-progress * 280}px) ${turn}scale(${1 - progress * 0.1})`;
         hoodieRef.current.style.opacity = `${Math.max(0, 1 - progress * 1.4)}`;
+      }
+      if (usingRealSpin) {
+        drawSpinFrame(progress);
       }
       if (leftRef.current) {
         leftRef.current.style.transform = `translateX(${-progress * 70}px)`;
@@ -114,12 +160,19 @@ export default function HoodieHero() {
             ref={hoodieRef}
             className="pointer-events-none absolute inset-0 flex items-center justify-center"
           >
-            <div className="w-[52vw] max-w-[360px] animate-float">
-              <ZipHoodie
-                color="#1C2740"
-                className="w-full drop-shadow-[0_50px_60px_rgba(0,0,0,0.55)]"
+            {frames ? (
+              <canvas
+                ref={canvasRef}
+                className="aspect-square w-[62vw] max-w-[420px] drop-shadow-[0_50px_60px_rgba(0,0,0,0.55)]"
               />
-            </div>
+            ) : (
+              <div className="w-[52vw] max-w-[360px] animate-float">
+                <ZipHoodie
+                  color="#1C2740"
+                  className="w-full drop-shadow-[0_50px_60px_rgba(0,0,0,0.55)]"
+                />
+              </div>
+            )}
           </div>
 
           <div

@@ -34,3 +34,22 @@ Dette er en frontend-only versjon (ingen betaling eller ordre-backend enda):
   (f.eks. Vipps eller Stripe), bør dette kobles til en ordentlig backend.
 - **Skolelogo-opplasting** lagres kun i nettleseren (object URL) — ikke
   persistert noe sted.
+
+## Forsidens hero (360°-spinn)
+
+`src/components/home/HoodieHero.tsx` viser i dag en tegnet genser med en
+CSS-vri som en fallback. For et ekte 360°-produktspinn (à la Nike/Apple) som
+roterer i takt med scrollingen:
+
+1. Legg 24 bilder i `public/hoodie-spin/`, navngitt `frame-01.webp` til
+   `frame-24.webp` (15° mellomrom, fast kamera, samme lys/beskjæring på alle).
+2. Ikke noe mer — `useSpinFrames` (`src/lib/useSpinFrames.ts`) forsøker å
+   laste denne sekvensen automatisk, og heroen bytter selv fra
+   CSS-fallbacken til et `<canvas>` som tegner riktig frame basert på
+   scroll-posisjon, med en gang alle 24 bildene er lastet inn.
+
+Beste vei til en konsistent sekvens uten fysisk produkt: generer en kort
+video av en jevn 360°-rotasjon (Higgsfield/Kling/Runway e.l.), og trekk ut
+24 jevnt fordelte bilder fra videoen (f.eks. med ffmpeg) i stedet for å be
+en bildegenerator om 24 separate stillbilder — det gir sjelden konsistent
+positur/lys fra bilde til bilde.
