@@ -2,26 +2,29 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Hoodie from "@/components/garments/Hoodie";
 import Joggebukse from "@/components/garments/Joggebukse";
+import HoodieHero from "@/components/home/HoodieHero";
 import { GARMENTS } from "@/lib/products";
 
 export default function Home() {
   return (
     <>
-      {/* HERO */}
-      <section className="container-px grid gap-12 pb-16 pt-16 md:grid-cols-2 md:gap-8 md:pb-28 md:pt-24">
-        <div className="flex flex-col justify-center">
+      <HoodieHero />
+
+      {/* INTRO */}
+      <section className="container-px grid gap-10 py-16 md:grid-cols-2 md:gap-8 md:py-24">
+        <div>
           <p className="eyebrow text-ink/45">Skoleklær, ikke russedress</p>
-          <h1 className="mt-5 font-display text-[13vw] font-normal leading-[1.02] tracking-tightest md:text-[3.6vw]">
-            Skoleklær som
-            <br />
-            faktisk er <em className="italic">kule</em>.
+          <h1 className="mt-5 font-display text-4xl leading-[1.05] md:text-5xl">
+            Skoleklær som faktisk er <em className="italic">kule</em>.
           </h1>
-          <p className="mt-7 max-w-md text-lg leading-relaxed text-ink/65">
+        </div>
+        <div className="flex flex-col justify-center">
+          <p className="max-w-md text-lg leading-relaxed text-ink/65">
             Hettegenser og joggebukse med skolens logo — designet av folk som
             faktisk går på vgs, ikke av dresskledde mellommenn. Billigere enn
             russedress-leverandørene, og null utslipp fra bomull til dør.
           </p>
-          <div className="mt-9 flex flex-wrap gap-4">
+          <div className="mt-8 flex flex-wrap gap-4">
             <Button href="/design" variant="primary">
               Design din genser →
             </Button>
@@ -30,7 +33,7 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="mt-14 grid max-w-md grid-cols-3 gap-6 border-t border-ink/10 pt-6">
+          <div className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-ink/10 pt-6">
             <div>
               <p className="font-display text-2xl">100%</p>
               <p className="mt-1 text-xs uppercase tracking-wide text-ink/45">
@@ -50,10 +53,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </div>
-
-        <div className="flex items-center justify-center">
-          <Hoodie color="#232C3D" className="w-2/3 max-w-sm" />
         </div>
       </section>
 

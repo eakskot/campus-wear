@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const links = [
   { href: "/produkter", label: "Produkter" },
@@ -13,13 +14,41 @@ const links = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  // On the homepage the nav starts transparent, floating over the dark
+  // hero, and becomes the normal solid cream bar once you've scrolled
+  // past it. Everywhere else it's always solid.
+  const [solid, setSolid] = useState(!isHome);
+
+  useEffect(() => {
+    if (!isHome) {
+      setSolid(true);
+      return;
+    }
+    const onScroll = () => setSolid(window.scrollY > window.innerHeight * 0.75);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
+
+  const transparent = isHome && !solid;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-ink/10 bg-cream/95 backdrop-blur">
+    <header
+      className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+        transparent
+          ? "border-transparent bg-transparent"
+          : "border-ink/10 bg-cream/95 backdrop-blur"
+      }`}
+    >
       <div className="container-px flex h-[76px] items-center justify-between md:h-24">
         <Link
           href="/"
-          className="font-display text-xl italic tracking-tight md:text-2xl"
+          className={`font-display text-xl italic tracking-tight transition-colors duration-300 md:text-2xl ${
+            transparent ? "text-cream" : "text-ink"
+          }`}
           onClick={() => setOpen(false)}
         >
           Campus Wear
@@ -30,7 +59,9 @@ export default function Nav() {
             <Link
               key={l.href}
               href={l.href}
-              className="eyebrow text-ink/55 transition hover:text-ink"
+              className={`eyebrow transition-colors duration-300 ${
+                transparent ? "text-cream/65 hover:text-cream" : "text-ink/55 hover:text-ink"
+              }`}
             >
               {l.label}
             </Link>
@@ -39,7 +70,11 @@ export default function Nav() {
 
         <Link
           href="/design"
-          className="hidden shrink-0 items-center border border-ink px-5 py-2.5 font-body text-[13px] uppercase tracking-[0.12em] text-ink transition hover:bg-ink hover:text-cream md:inline-flex"
+          className={`hidden shrink-0 items-center border px-5 py-2.5 font-body text-[13px] uppercase tracking-[0.12em] transition duration-300 md:inline-flex ${
+            transparent
+              ? "border-cream/60 text-cream hover:bg-cream hover:text-ink"
+              : "border-ink text-ink hover:bg-ink hover:text-cream"
+          }`}
         >
           Design din genser
         </Link>
@@ -52,13 +87,13 @@ export default function Nav() {
           className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden"
         >
           <span
-            className={`block h-px w-5 bg-ink transition ${open ? "translate-y-[7px] rotate-45" : ""}`}
+            className={`block h-px w-5 transition ${transparent ? "bg-cream" : "bg-ink"} ${open ? "translate-y-[7px] rotate-45" : ""}`}
           />
           <span
-            className={`block h-px w-5 bg-ink transition ${open ? "opacity-0" : ""}`}
+            className={`block h-px w-5 transition ${transparent ? "bg-cream" : "bg-ink"} ${open ? "opacity-0" : ""}`}
           />
           <span
-            className={`block h-px w-5 bg-ink transition ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
+            className={`block h-px w-5 transition ${transparent ? "bg-cream" : "bg-ink"} ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
           />
         </button>
       </div>

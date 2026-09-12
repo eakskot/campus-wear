@@ -24,9 +24,14 @@ const config: Config = {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-16px)" },
+        },
       },
       animation: {
         fade: "fade 0.6s ease-out both",
+        float: "float 5s ease-in-out infinite",
       },
     },
   },
