@@ -17,19 +17,31 @@ const FRAME_W = 560;
 const FRAME_H = 996;
 
 /**
- * Full-bleed hero: "CAMPUS" / "WEAR" in huge block letters either side of
- * a floating zip hoodie, on a soft warm beige backdrop matching the
- * product shot. The section is taller than the viewport (extra scroll
- * runway) and pinned with `sticky` while that runway scrolls past — we
- * read scroll progress across that runway and use it to float the hoodie
- * upward and fade the letters apart, then the rest of the page takes over
- * normally once the runway is exhausted.
+ * Full-bleed hero on a soft warm beige backdrop matching the product shot.
+ * Desktop: "CAMPUS" / "WEAR" flank a floating zip hoodie at mid-height.
+ * Mobile: there's no room to flank anything, so the words stack directly
+ * above the (much bigger) hoodie instead, and the whole thing fills the
+ * true mobile viewport height (`dvh`, not `vh`, so it isn't left short by
+ * the browser's address bar).
+ *
+ * The hoodie itself (canvas + fallback) is rendered exactly once and just
+ * repositioned responsively — rendering it twice (once per layout) would
+ * mean two <canvas> elements fighting over one ref, and only one of them
+ * ever actually getting pixels drawn into it.
+ *
+ * The section is taller than the viewport (extra scroll runway) and
+ * pinned with `sticky` while that runway scrolls past — we read scroll
+ * progress across it and use it to float the hoodie upward and fade/part
+ * the letters, then the rest of the page takes over once the runway is
+ * exhausted.
  */
 export default function HoodieHero() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const hoodieRef = useRef<HTMLDivElement>(null);
   const leftRef = useRef<HTMLHeadingElement>(null);
   const rightRef = useRef<HTMLHeadingElement>(null);
+  const mobileTopRef = useRef<HTMLHeadingElement>(null);
+  const mobileBottomRef = useRef<HTMLHeadingElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
   const tagsRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -89,23 +101,35 @@ export default function HoodieHero() {
         const turn = usingRealSpin
           ? ""
           : `rotateY(${progress * 34}deg) rotateZ(${Math.sin(progress * Math.PI) * 7}deg) `;
-        hoodieRef.current.style.transform = `perspective(1000px) translateY(${-progress * 280}px) ${turn}scale(${1 - progress * 0.1})`;
+        hoodieRef.current.style.transform = `translateY(${-progress * 220}px) perspective(1000px) ${turn}scale(${1 - progress * 0.1})`;
         hoodieRef.current.style.opacity = `${Math.max(0, 1 - progress * 1.4)}`;
       }
       if (usingRealSpin) {
         drawSpinFrame(progress);
       }
+
+      const letterOpacity = `${Math.max(0, 1 - progress * 1.6)}`;
+
+      // Desktop: words part sideways.
       if (leftRef.current) {
         leftRef.current.style.transform = `translateX(${-progress * 70}px)`;
+        leftRef.current.style.opacity = letterOpacity;
       }
       if (rightRef.current) {
         rightRef.current.style.transform = `translateX(${progress * 70}px)`;
-      }
-      if (leftRef.current && rightRef.current) {
-        const letterOpacity = `${Math.max(0, 1 - progress * 1.6)}`;
-        leftRef.current.style.opacity = letterOpacity;
         rightRef.current.style.opacity = letterOpacity;
       }
+      // Mobile: words stack above the hoodie, so they part vertically
+      // instead — "Campus" drifts up, "Wear" drifts down.
+      if (mobileTopRef.current) {
+        mobileTopRef.current.style.transform = `translateY(${-progress * 30}px)`;
+        mobileTopRef.current.style.opacity = letterOpacity;
+      }
+      if (mobileBottomRef.current) {
+        mobileBottomRef.current.style.transform = `translateY(${progress * 18}px)`;
+        mobileBottomRef.current.style.opacity = letterOpacity;
+      }
+
       if (hintRef.current) {
         hintRef.current.style.opacity = `${Math.max(0, 1 - progress * 5)}`;
       }
@@ -134,8 +158,8 @@ export default function HoodieHero() {
   }, []);
 
   return (
-    <section ref={wrapRef} className="relative h-[180vh]">
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#C0B7AB]">
+    <section ref={wrapRef} className="relative h-[180dvh]">
+      <div className="sticky top-0 h-dvh w-full overflow-hidden bg-[#C0B7AB]">
         {/* Matches the product photo's own vertical vignette (sampled
             from its edges: darker near the top/bottom, lighter in the
             middle band) so the canvas rectangle blends into the page
@@ -149,73 +173,90 @@ export default function HoodieHero() {
           }}
         />
 
-        <div className="relative flex h-full items-center justify-center">
-          {/* Campus/Wear are two equal flex halves, each pinned by padding
-              to a fixed distance from the exact center — not by hugging
-              the outer viewport edge. That's what keeps the gap around the
-              hoodie symmetric no matter how much wider "Campus" is than
-              "Wear"; otherwise the shorter word always ends up looking
-              too far out. */}
-          <div className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center">
-            <div className="flex min-w-0 flex-1 justify-end pr-[15vw] md:pr-[12vw]">
-              <h2
-                ref={leftRef}
-                className="select-none whitespace-nowrap font-body text-[clamp(1.5rem,7.5vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink md:text-[clamp(2.5rem,11vw,7.5rem)]"
-              >
-                Campus
-              </h2>
-            </div>
-            <div className="flex min-w-0 flex-1 justify-start pl-[15vw] md:pl-[12vw]">
-              <h2
-                ref={rightRef}
-                className="select-none whitespace-nowrap font-body text-[clamp(1.5rem,7.5vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink md:text-[clamp(2.5rem,11vw,7.5rem)]"
-              >
-                Wear
-              </h2>
-            </div>
-          </div>
-
-          <div
-            ref={hoodieRef}
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
+        {/* MOBILE: words stacked near the top, hoodie below them */}
+        <div className="pointer-events-none absolute inset-x-0 top-[9%] flex flex-col items-center leading-[0.85] md:hidden">
+          <h2
+            ref={mobileTopRef}
+            className="select-none font-body text-[15vw] font-black uppercase tracking-tighter text-ink"
           >
-            {frames ? (
-              <canvas
-                ref={canvasRef}
-                style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
-                className="h-auto w-[26vw] max-h-[55vh] md:h-[62vh] md:max-h-[640px] md:w-auto drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
+            Campus
+          </h2>
+          <h2
+            ref={mobileBottomRef}
+            className="select-none font-body text-[15vw] font-black uppercase tracking-tighter text-ink"
+          >
+            Wear
+          </h2>
+        </div>
+
+        {/* DESKTOP: words flank the hoodie at mid-height. Each half is
+            pinned by padding to a fixed distance from the exact center —
+            not by hugging the outer viewport edge. That's what keeps the
+            gap around the hoodie symmetric no matter how much wider
+            "Campus" is than "Wear"; otherwise the shorter word always
+            ends up looking too far out. */}
+        <div className="pointer-events-none absolute inset-x-0 top-1/2 hidden -translate-y-1/2 items-center md:flex">
+          <div className="flex min-w-0 flex-1 justify-end pr-[12vw]">
+            <h2
+              ref={leftRef}
+              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,11vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink"
+            >
+              Campus
+            </h2>
+          </div>
+          <div className="flex min-w-0 flex-1 justify-start pl-[12vw]">
+            <h2
+              ref={rightRef}
+              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,11vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink"
+            >
+              Wear
+            </h2>
+          </div>
+        </div>
+
+        {/* Hoodie: rendered once, positioned below the stacked words on
+            mobile, and dead-centered (overlaying the flanking words) on
+            desktop. */}
+        <div
+          ref={hoodieRef}
+          className="pointer-events-none absolute inset-x-0 top-[34%] flex items-center justify-center md:top-0 md:bottom-0"
+        >
+          {frames ? (
+            <canvas
+              ref={canvasRef}
+              style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
+              className="h-[40vh] w-auto max-h-[420px] drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)] md:h-[62vh] md:max-h-[640px]"
+            />
+          ) : (
+            <div className="w-[34vw] max-w-[220px] animate-float md:w-[52vw] md:max-w-[360px]">
+              <ZipHoodie
+                color="#1C2740"
+                className="w-full drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
               />
-            ) : (
-              <div className="w-[26vw] max-w-[160px] md:w-[52vw] md:max-w-[360px] animate-float">
-                <ZipHoodie
-                  color="#1C2740"
-                  className="w-full drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
-                />
-              </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
 
-          <div
-            ref={tagsRef}
-            className="pointer-events-none absolute inset-x-6 bottom-10 flex justify-between md:inset-x-10"
-          >
-            <p className="max-w-[8.5rem] font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-ink/50 md:text-[11px]">
-              Klær for mer enn skolen
-            </p>
-            <p className="max-w-[8.5rem] text-right font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-ink/50 md:text-[11px]">
-              Samme skole. Ny stil.
-            </p>
-          </div>
+        <div
+          ref={tagsRef}
+          className="pointer-events-none absolute inset-x-6 bottom-10 flex justify-between md:inset-x-10"
+        >
+          <p className="max-w-[8.5rem] font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-ink/50 md:text-[11px]">
+            Klær for mer enn skolen
+          </p>
+          <p className="max-w-[8.5rem] text-right font-body text-[10px] uppercase leading-snug tracking-[0.2em] text-ink/50 md:text-[11px]">
+            Samme skole. Ny stil.
+          </p>
+        </div>
 
-          <div
-            ref={hintRef}
-            className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
-          >
-            <span className="font-body text-[10px] uppercase tracking-[0.25em] text-ink/50">
-              Scroll
-            </span>
-            <span className="h-8 w-px bg-ink/30" />
-          </div>
+        <div
+          ref={hintRef}
+          className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
+        >
+          <span className="font-body text-[10px] uppercase tracking-[0.25em] text-ink/50">
+            Scroll
+          </span>
+          <span className="h-8 w-px bg-ink/30" />
         </div>
       </div>
     </section>
