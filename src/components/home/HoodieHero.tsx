@@ -173,22 +173,6 @@ export default function HoodieHero() {
           }}
         />
 
-        {/* MOBILE: words stacked near the top, hoodie below them */}
-        <div className="pointer-events-none absolute inset-x-0 top-[9%] flex flex-col items-center leading-[0.85] md:hidden">
-          <h2
-            ref={mobileTopRef}
-            className="select-none font-body text-[15vw] font-black uppercase tracking-tighter text-ink"
-          >
-            Campus
-          </h2>
-          <h2
-            ref={mobileBottomRef}
-            className="select-none font-body text-[15vw] font-black uppercase tracking-tighter text-ink"
-          >
-            Wear
-          </h2>
-        </div>
-
         {/* DESKTOP: words flank the hoodie at mid-height. Each half is
             pinned by padding to a fixed distance from the exact center —
             not by hugging the outer viewport edge. That's what keeps the
@@ -214,27 +198,49 @@ export default function HoodieHero() {
           </div>
         </div>
 
-        {/* Hoodie: rendered once, positioned below the stacked words on
-            mobile, and dead-centered (overlaying the flanking words) on
-            desktop. */}
+        {/* Hoodie: rendered once. On mobile it's full-bleed — cropped with
+            object-cover to fill the entire screen edge to edge, no visible
+            card/box around it. On desktop it's a smaller centered image
+            flanked by the words instead. */}
         <div
           ref={hoodieRef}
-          className="pointer-events-none absolute inset-x-0 top-[34%] flex items-center justify-center md:top-0 md:bottom-0"
+          className="pointer-events-none absolute inset-0 md:flex md:items-center md:justify-center"
         >
           {frames ? (
             <canvas
               ref={canvasRef}
               style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
-              className="h-[40vh] w-auto max-h-[420px] drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)] md:h-[62vh] md:max-h-[640px]"
+              className="absolute inset-0 h-full w-full object-cover md:static md:inset-auto md:h-[62vh] md:max-h-[640px] md:w-auto md:object-contain md:drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
             />
           ) : (
-            <div className="w-[34vw] max-w-[220px] animate-float md:w-[52vw] md:max-w-[360px]">
+            <div className="absolute inset-0 flex items-center justify-center md:static md:inset-auto md:w-[52vw] md:max-w-[360px]">
               <ZipHoodie
                 color="#1C2740"
-                className="w-full drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
+                className="w-[70vw] max-w-[280px] animate-float md:w-full md:drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
               />
             </div>
           )}
+        </div>
+
+        {/* MOBILE: "Campus Wear" stamped directly on the garment's chest,
+            not floating above it in empty space. Positioned by percentage
+            so it lands on the chest regardless of screen height, since
+            object-cover crops the sides but keeps the full vertical
+            extent of the photo (so a % position always matches the same
+            spot on the actual garment). */}
+        <div className="pointer-events-none absolute inset-x-0 top-[60%] flex flex-col items-center leading-[0.85] md:hidden">
+          <h2
+            ref={mobileTopRef}
+            className="select-none font-body text-[15vw] font-black uppercase tracking-tighter text-cream"
+          >
+            Campus
+          </h2>
+          <h2
+            ref={mobileBottomRef}
+            className="select-none font-body text-[15vw] font-black uppercase tracking-tighter text-cream"
+          >
+            Wear
+          </h2>
         </div>
 
         <div
