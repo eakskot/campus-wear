@@ -135,30 +135,44 @@ export default function HoodieHero() {
 
   return (
     <section ref={wrapRef} className="relative h-[180vh]">
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#C7BEB0]">
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#C0B7AB]">
+        {/* Matches the product photo's own vertical vignette (sampled
+            from its edges: darker near the top/bottom, lighter in the
+            middle band) so the canvas rectangle blends into the page
+            instead of reading as a pasted-in photo card. */}
         <div
           ref={bgRef}
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(65% 55% at 50% 42%, rgba(224,217,202,0.9), transparent 70%), radial-gradient(90% 70% at 50% 100%, rgba(178,169,153,0.5), transparent 70%)",
+              "linear-gradient(to bottom, #C3BAAF 0%, #CCC5B9 42%, #CCC5B9 58%, #BFB6AA 100%)",
           }}
         />
 
         <div className="relative flex h-full items-center justify-center">
-          <div className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-between px-3 md:px-10">
-            <h2
-              ref={leftRef}
-              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,13vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink"
-            >
-              Campus
-            </h2>
-            <h2
-              ref={rightRef}
-              className="select-none whitespace-nowrap font-body text-[clamp(2.5rem,13vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink"
-            >
-              Wear
-            </h2>
+          {/* Campus/Wear are two equal flex halves, each pinned by padding
+              to a fixed distance from the exact center — not by hugging
+              the outer viewport edge. That's what keeps the gap around the
+              hoodie symmetric no matter how much wider "Campus" is than
+              "Wear"; otherwise the shorter word always ends up looking
+              too far out. */}
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center">
+            <div className="flex min-w-0 flex-1 justify-end pr-[15vw] md:pr-[12vw]">
+              <h2
+                ref={leftRef}
+                className="select-none whitespace-nowrap font-body text-[clamp(1.5rem,7.5vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink md:text-[clamp(2.5rem,11vw,7.5rem)]"
+              >
+                Campus
+              </h2>
+            </div>
+            <div className="flex min-w-0 flex-1 justify-start pl-[15vw] md:pl-[12vw]">
+              <h2
+                ref={rightRef}
+                className="select-none whitespace-nowrap font-body text-[clamp(1.5rem,7.5vw,7.5rem)] font-black uppercase leading-none tracking-tighter text-ink md:text-[clamp(2.5rem,11vw,7.5rem)]"
+              >
+                Wear
+              </h2>
+            </div>
           </div>
 
           <div
@@ -169,10 +183,10 @@ export default function HoodieHero() {
               <canvas
                 ref={canvasRef}
                 style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
-                className="h-[62vh] max-h-[640px] w-auto drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
+                className="h-auto w-[26vw] max-h-[55vh] md:h-[62vh] md:max-h-[640px] md:w-auto drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
               />
             ) : (
-              <div className="w-[52vw] max-w-[360px] animate-float">
+              <div className="w-[26vw] max-w-[160px] md:w-[52vw] md:max-w-[360px] animate-float">
                 <ZipHoodie
                   color="#1C2740"
                   className="w-full drop-shadow-[0_30px_40px_rgba(60,50,35,0.25)]"
