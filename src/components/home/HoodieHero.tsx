@@ -159,17 +159,18 @@ export default function HoodieHero() {
 
   return (
     <section ref={wrapRef} className="relative -mt-[76px] h-[180dvh] md:-mt-24">
-      <div className="sticky top-0 h-dvh w-full overflow-hidden bg-[#C0B7AB]">
-        {/* Matches the product photo's own vertical vignette (sampled
-            from its edges: darker near the top/bottom, lighter in the
-            middle band) so the canvas rectangle blends into the page
-            instead of reading as a pasted-in photo card. */}
+      <div className="sticky top-0 h-dvh w-full overflow-hidden bg-[#C4BCB0]">
+        {/* Soft radial studio-backdrop vignette (lighter warm cream in the
+            middle, fading to a warm greige at the edges/corners) so the
+            hoodie photo's own backdrop blends into the page — this mainly
+            shows on desktop, where the photo is letterboxed rather than
+            full-bleed. */}
         <div
           ref={bgRef}
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, #C3BAAF 0%, #CCC5B9 42%, #CCC5B9 58%, #BFB6AA 100%)",
+              "radial-gradient(ellipse 75% 65% at 50% 46%, #DEDACE 0%, #D0C9BC 45%, #B9B1A4 100%)",
           }}
         />
 
@@ -207,7 +208,7 @@ export default function HoodieHero() {
             full vertical extent of the photo, and on landscape screens
             the photo is simply shown at full height — either way a %
             position always matches the same spot on the actual garment. */}
-        <div className="pointer-events-none absolute inset-x-0 top-[60%] flex flex-col items-center leading-[0.85]">
+        <div className="pointer-events-none absolute inset-x-0 top-[52%] flex flex-col items-center leading-[0.85]">
           <h2
             ref={topRef}
             className="select-none font-body text-[clamp(2rem,9vh,5.5rem)] font-black uppercase tracking-tighter text-cream"
