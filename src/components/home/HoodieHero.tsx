@@ -11,11 +11,11 @@ import { useSpinFrames } from "@/lib/useSpinFrames";
 const SPIN_FRAME_COUNT = 24;
 const SPIN_BASE_PATH = "/hoodie-spin";
 
-// Canvas buffer size — matches frame-01's native resolution (the frame
-// shown before any scrolling happens, so it's worth keeping sharp). The
-// other 23 frames are compressed smaller for file size, but drawImage
-// scales them up into this same buffer just fine; the very minor upscale
-// is not noticeable once a garment is already spinning past.
+// Canvas buffer size — matches the frames' native resolution. All 24
+// frames are transparent (alpha-channel) WebP cutouts extracted at this
+// same resolution, so there's no quality difference between them; the
+// canvas clears to transparent between draws, which is what lets the
+// garment sit directly on the page background with no visible edge.
 const FRAME_W = 720;
 const FRAME_H = 1280;
 
@@ -185,7 +185,7 @@ export default function HoodieHero() {
             <canvas
               ref={canvasRef}
               style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
-              className="absolute inset-0 h-full w-full object-cover md:static md:inset-auto md:h-full md:w-auto md:object-contain"
+              className="absolute inset-0 h-full w-full object-cover drop-shadow-[0_25px_35px_rgba(40,32,20,0.28)] md:static md:inset-auto md:h-full md:w-auto md:object-contain"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center md:static md:inset-auto">

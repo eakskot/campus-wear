@@ -43,13 +43,20 @@ roterer i takt med scrollingen:
 
 1. Legg 24 bilder i `public/hoodie-spin/`, navngitt `frame-01.webp` til
    `frame-24.webp` (15° mellomrom, fast kamera, samme lys/beskjæring på alle).
+   **Bildene må ha transparent bakgrunn** (alpha-kanal, ikke et opakt
+   studio-bakteppe) — ellers vises en tydelig rektangulær kant der bildet
+   møter sidens egen bakgrunn, uansett hvor godt fargene er matchet.
 2. Ikke noe mer — `useSpinFrames` (`src/lib/useSpinFrames.ts`) forsøker å
    laste denne sekvensen automatisk, og heroen bytter selv fra
    CSS-fallbacken til et `<canvas>` som tegner riktig frame basert på
-   scroll-posisjon, med en gang alle 24 bildene er lastet inn.
+   scroll-posisjon, med en gang alle 24 bildene er lastet inn. Canvaset
+   tømmes til transparent mellom hver frame (`clearRect`), så det trengs
+   ingen kodeendring — bare at kildebildene faktisk er transparente.
 
 Beste vei til en konsistent sekvens uten fysisk produkt: generer en kort
-video av en jevn 360°-rotasjon (Higgsfield/Kling/Runway e.l.), og trekk ut
-24 jevnt fordelte bilder fra videoen (f.eks. med ffmpeg) i stedet for å be
-en bildegenerator om 24 separate stillbilder — det gir sjelden konsistent
-positur/lys fra bilde til bilde.
+video av en jevn 360°-rotasjon (Higgsfield/Kling/Runway e.l.), trekk ut 24
+jevnt fordelte bilder fra videoen (f.eks. med ffmpeg) i stedet for å be en
+bildegenerator om 24 separate stillbilder (det gir sjelden konsistent
+positur/lys fra bilde til bilde), og fjern bakgrunnen fra hvert bilde med et
+verktøy som `rembg` (ONNX-modell, f.eks. `bria-rmbg-2.0`) før de lagres som
+WebP med alpha-kanal.
