@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
-import Hoodie from "@/components/garments/Hoodie";
 import HoodieHero from "@/components/home/HoodieHero";
+import ProductPhoto from "@/components/product/ProductPhoto";
 import ProductTile from "@/components/product/ProductTile";
 import { PRODUCTS } from "@/lib/products";
 
@@ -124,7 +124,7 @@ export default function Home() {
             </Button>
           </div>
           <div className="relative flex items-center justify-center bg-paper py-16">
-            <Hoodie color="#17181B" className="w-1/2 max-w-[220px]" />
+            <ProductPhoto id="hoodie" className="h-64 w-1/2" />
             <div className="absolute left-1/2 top-[42%] flex h-12 w-12 -translate-x-1/2 items-center justify-center rounded-full border border-dashed border-rust/60 font-body text-[9px] uppercase tracking-wide text-rust">
               Logo
             </div>

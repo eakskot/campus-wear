@@ -2,19 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Hoodie from "@/components/garments/Hoodie";
-import Joggebukse from "@/components/garments/Joggebukse";
+import ProductPhoto from "@/components/product/ProductPhoto";
 import Button from "@/components/ui/Button";
 import { COLORS, SIZES, type Garment } from "@/lib/products";
 
-const GARMENT_COMPONENT = {
-  hoodie: Hoodie,
-  joggebukse: Joggebukse,
-} as const;
-
 export default function ProductCard({ garment }: { garment: Garment }) {
   const [color, setColor] = useState(COLORS[0]);
-  const Illustration = GARMENT_COMPONENT[garment.id];
 
   return (
     <div className="flex flex-col">
@@ -22,7 +15,7 @@ export default function ProductCard({ garment }: { garment: Garment }) {
         href={`/produkter/${garment.id}`}
         className="flex items-center justify-center bg-sand/50 p-10 transition hover:bg-sand/70 md:p-14"
       >
-        <Illustration color={color.hex} className="w-3/4 max-w-[220px]" />
+        <ProductPhoto id={garment.id} colorHex={color.hex} className="h-64 w-full" />
       </Link>
 
       <div className="flex flex-1 flex-col pt-7">

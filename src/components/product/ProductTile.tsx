@@ -1,15 +1,9 @@
 import Link from "next/link";
-import Hoodie from "@/components/garments/Hoodie";
-import Joggebukse from "@/components/garments/Joggebukse";
-import { COLORS, type Product } from "@/lib/products";
-
-const GARMENT_COMPONENT = {
-  hoodie: Hoodie,
-  joggebukse: Joggebukse,
-} as const;
+import ProductPhoto from "@/components/product/ProductPhoto";
+import type { Product } from "@/lib/products";
 
 /**
- * Én klikkbar boks: illustrasjon på lys bunn + navn, kort beskrivelse og
+ * Én klikkbar boks: produktfoto på lys bunn + navn, kort beskrivelse og
  * pris. Brukes både i forsidens sortiment-seksjon og under "Relaterte
  * produkter" på produktsiden, slik at de to alltid ser like ut.
  */
@@ -21,8 +15,6 @@ export default function ProductTile({
   /** Mindre variant, brukt i "Relaterte produkter". */
   compact?: boolean;
 }) {
-  const Illustration = GARMENT_COMPONENT[product.id];
-
   return (
     <Link href={`/produkter/${product.id}`} className="group block">
       <div
@@ -30,9 +22,9 @@ export default function ProductTile({
           compact ? "p-8" : "p-10 md:p-14"
         }`}
       >
-        <Illustration
-          color={COLORS[0].hex}
-          className={compact ? "w-2/3 max-w-[160px]" : "w-3/4 max-w-[220px]"}
+        <ProductPhoto
+          id={product.id}
+          className={compact ? "h-40 w-full" : "h-56 w-full md:h-64"}
         />
       </div>
       <div className="mt-5 flex items-start justify-between gap-4">
