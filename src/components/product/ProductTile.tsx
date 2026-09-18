@@ -17,14 +17,11 @@ export default function ProductTile({
 }) {
   return (
     <Link href={`/produkter/${product.id}`} className="group block">
-      <div
-        className={`flex items-center justify-center bg-sand/50 transition group-hover:bg-sand/70 ${
-          compact ? "p-8" : "p-10 md:p-14"
-        }`}
-      >
+      <div className="overflow-hidden bg-sand/50">
         <ProductPhoto
           id={product.id}
-          className={compact ? "h-40 w-full" : "h-56 w-full md:h-64"}
+          variant="lifestyle"
+          className={`${compact ? "h-40" : "h-56 md:h-64"} w-full transition duration-300 group-hover:scale-[1.03]`}
         />
       </div>
       <div className="mt-5 flex items-start justify-between gap-4">

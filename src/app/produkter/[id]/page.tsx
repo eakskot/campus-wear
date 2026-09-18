@@ -72,7 +72,6 @@ export default async function ProductPage({
           dette plagget, slik at man kan legge på skolelogoen rett her uten
           å navigere bort fra produktsiden. */}
       <section id="design" className="container-px pb-20 md:pb-28">
-        <p className="eyebrow mb-8 text-ink/45">Lag ditt design</p>
         <Suspense fallback={null}>
           <Configurator initialGarment={product.id} />
         </Suspense>

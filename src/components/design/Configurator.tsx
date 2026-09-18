@@ -2,7 +2,11 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import ProductPhoto from "@/components/product/ProductPhoto";
+import ProductPhoto, {
+  VIEWS,
+  hasStudioPhoto,
+  type ViewAngle,
+} from "@/components/product/ProductPhoto";
 import Button from "@/components/ui/Button";
 import {
   COLORS,
@@ -21,13 +25,6 @@ const PRESETS: { label: string; pos: Position; scale: number }[] = [
   { label: "Midt bryst", pos: { x: 50, y: 38 }, scale: 0.8 },
   { label: "Stort print", pos: { x: 50, y: 52 }, scale: 1.3 },
 ];
-
-// Plasseringsfaner — samme mønster som referansen (Front/Bak/Hette/Arm).
-// Vi har foreløpig bare produktbilder og trykkflate for "Front"; de tre
-// andre er lagt inn som riktige faner (for gjenkjennelig struktur) men
-// deaktivert med en "kommer snart"-tekst i stedet for å late som de virker.
-const PLACEMENTS = ["Front", "Bak", "Hette", "Arm"] as const;
-type Placement = (typeof PLACEMENTS)[number];
 
 // Noen enkle, ferdige dekor-elementer for "Legg til elementer" — et
 // lettvekts alternativ til opplastet logo/tekst, i samme ånd som
@@ -84,7 +81,15 @@ export default function Configurator({
       COLORS[0]
   );
 
-  const [placement, setPlacement] = useState<Placement>("Front");
+  // Hvilken vinkel av plagget som vises — dette ER produktfotoet OG
+  // avgjør om "Lag ditt design" er tilgjengelig, siden vi bare kan la deg
+  // plassere et trykk et sted vi faktisk har et bilde av.
+  const [view, setView] = useState<ViewAngle>("front");
+  // Bytt tilbake til front når plagget byttes, i tilfelle det nye plagget
+  // ikke har et bilde for vinkelen du sto på.
+  useEffect(() => {
+    setView("front");
+  }, [garmentType]);
 
   const [mode, setMode] = useState<DesignMode>("none");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
@@ -157,6 +162,8 @@ export default function Configurator({
     (mode === "upload" && logoUrl) ||
     (mode === "text" && initials.trim().length > 0) ||
     (mode === "element" && selectedElement);
+  const viewLabel = VIEWS.find((v) => v.key === view)?.label ?? view;
+  const canDesignHere = hasStudioPhoto(garmentType, view);
 
   const designSummary = () => {
     if (mode === "upload") return logoName || "Opplastet fil (vedlagt i e-posten)";
@@ -170,7 +177,7 @@ export default function Configurator({
       `Plagg: ${garmentInfo.name} (${color.name})`,
       `Størrelse: ${size}`,
       `Antall: ${qty}`,
-      `Design (${placement}): ${designSummary()}`,
+      `Design (${viewLabel}): ${designSummary()}`,
       `Plassering: ${Math.round(pos.x)}% / ${Math.round(pos.y)}%, størrelse ${scale.toFixed(2)}x`,
       "",
       `Navn: ${name}`,
@@ -214,19 +221,35 @@ export default function Configurator({
           </div>
         )}
 
+        {/* Vinkel-velger — bytter selve produktfotoet. Hoodien har ekte
+            bilder av alle tre (samme fysiske plagg som 360°-spinnet på
+            forsiden); buksa har foreløpig bare front. */}
+        <div className={`flex gap-2 ${embedded ? "" : "mt-5"}`}>
+          {VIEWS.map((v) => (
+            <button
+              key={v.key}
+              onClick={() => setView(v.key)}
+              className={chipClasses(view === v.key)}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+
         <div
           ref={stageRef}
-          className={`relative w-full touch-none select-none bg-sand/40 ${embedded ? "" : "mt-5"} aspect-[5/6]`}
+          className="relative mt-3 aspect-[5/6] w-full touch-none select-none bg-sand/40"
         >
           <div className="absolute inset-0 flex items-center justify-center p-8">
             <ProductPhoto
               id={garmentType}
+              view={view}
               colorHex={color.hex}
               className="h-full w-full"
             />
           </div>
 
-          {placement === "Front" && hasDesign && (
+          {canDesignHere && hasDesign && (
             <div
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
@@ -260,13 +283,15 @@ export default function Configurator({
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={() => setLightboxOpen(true)}
-            className="absolute bottom-4 left-4 border border-ink/20 bg-cream/90 px-4 py-2 font-body text-[11px] uppercase tracking-[0.1em] text-ink/70 backdrop-blur transition hover:border-ink hover:text-ink"
-          >
-            Trykk for stor visning
-          </button>
+          {canDesignHere && (
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              className="absolute bottom-4 left-4 border border-ink/20 bg-cream/90 px-4 py-2 font-body text-[11px] uppercase tracking-[0.1em] text-ink/70 backdrop-blur transition hover:border-ink hover:text-ink"
+            >
+              Trykk for stor visning
+            </button>
+          )}
         </div>
         <p className="mt-3 text-xs text-ink/45">
           Dra designet dit du vil ha det. Bruk størrelse-glideren for å
@@ -305,29 +330,14 @@ export default function Configurator({
         </div>
 
         <div className="border-t border-ink/10 pt-8">
-          <p className="font-display text-xl">Lag ditt design</p>
+          <p className="font-display text-xl">
+            Lag ditt design — {viewLabel.toLowerCase()}
+          </p>
 
-          {/* Plasseringsfaner */}
-          <div className="mt-4 flex gap-6 border-b border-ink/10">
-            {PLACEMENTS.map((p) => (
-              <button
-                key={p}
-                onClick={() => setPlacement(p)}
-                className={`border-b-2 pb-3 font-body text-xs uppercase tracking-[0.12em] transition ${
-                  placement === p
-                    ? "border-ink text-ink"
-                    : "border-transparent text-ink/40 hover:text-ink/70"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-
-          {placement !== "Front" ? (
+          {!canDesignHere ? (
             <p className="mt-6 border border-dashed border-ink/20 px-4 py-6 text-center text-sm text-ink/50">
-              Design på {placement.toLowerCase()} kommer snart — bruk Front
-              for nå.
+              Vi har ikke {viewLabel.toLowerCase()}-bilde av dette plagget
+              ennå, så design her kommer snart — bruk Front for nå.
             </p>
           ) : (
             <>
@@ -577,6 +587,7 @@ export default function Configurator({
         >
           <ProductPhoto
             id={garmentType}
+            view={view}
             colorHex={color.hex}
             className="h-full max-h-[85vh] w-full max-w-lg"
           />
