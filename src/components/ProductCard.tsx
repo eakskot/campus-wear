@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Hoodie from "@/components/garments/Hoodie";
 import Joggebukse from "@/components/garments/Joggebukse";
 import Button from "@/components/ui/Button";
@@ -17,14 +18,19 @@ export default function ProductCard({ garment }: { garment: Garment }) {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-center bg-sand/50 p-10 md:p-14">
+      <Link
+        href={`/produkter/${garment.id}`}
+        className="flex items-center justify-center bg-sand/50 p-10 transition hover:bg-sand/70 md:p-14"
+      >
         <Illustration color={color.hex} className="w-3/4 max-w-[220px]" />
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col pt-7">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="font-display text-2xl">{garment.name}</h3>
+            <Link href={`/produkter/${garment.id}`}>
+              <h3 className="font-display text-2xl hover:text-rust">{garment.name}</h3>
+            </Link>
             <p className="text-sm text-ink/55">{garment.tagline}</p>
           </div>
           <p className="whitespace-nowrap font-display text-xl">

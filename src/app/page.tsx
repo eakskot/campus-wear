@@ -1,14 +1,37 @@
-import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Hoodie from "@/components/garments/Hoodie";
-import Joggebukse from "@/components/garments/Joggebukse";
 import HoodieHero from "@/components/home/HoodieHero";
-import { GARMENTS } from "@/lib/products";
+import ProductTile from "@/components/product/ProductTile";
+import { PRODUCTS } from "@/lib/products";
 
 export default function Home() {
   return (
     <>
       <HoodieHero />
+
+      {/* SORTIMENT — venstre: hva vi selger, høyre: to klikkbare bokser
+          som går rett inn på hvert plaggs egen produktside. */}
+      <section className="container-px grid gap-10 border-b border-ink/10 py-20 md:grid-cols-2 md:gap-14 md:py-28">
+        <div>
+          <p className="eyebrow text-ink/45">Sortimentet</p>
+          <h2 className="mt-5 max-w-sm font-display text-4xl leading-[1.05] md:text-5xl">
+            Skoleklær med skolens logo.
+          </h2>
+          <p className="mt-6 max-w-sm text-ink/65">
+            To plagg, gjort ordentlig. Velg farge, last opp skolelogoen og se
+            designet live før klassen bestiller.
+          </p>
+          <Button href="/produkter" variant="ghost" className="mt-8">
+            Se hele kolleksjonen →
+          </Button>
+        </div>
+
+        <div className="grid gap-10 sm:grid-cols-2 md:gap-8">
+          {PRODUCTS.map((p) => (
+            <ProductTile key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
 
       {/* INTRO */}
       <section className="container-px grid gap-10 py-16 md:grid-cols-2 md:gap-8 md:py-24">
@@ -81,38 +104,6 @@ export default function Home() {
             <p className="mt-3 text-sm leading-relaxed text-ink/60">{item.body}</p>
           </div>
         ))}
-      </section>
-
-      {/* PRODUCT HIGHLIGHT */}
-      <section className="container-px py-20 md:py-28">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="font-display text-4xl italic md:text-5xl">Produktene</h2>
-          <Link
-            href="/produkter"
-            className="eyebrow text-ink/55 hover:text-rust"
-          >
-            Se alle produkter →
-          </Link>
-        </div>
-
-        <div className="mt-14 grid gap-16 md:grid-cols-2 md:gap-10">
-          <div>
-            <div className="flex items-center justify-center bg-sand/60 py-16">
-              <Hoodie color="#D9CBAE" className="w-2/5 max-w-[220px]" />
-            </div>
-            <p className="mt-6 font-display text-xl">{GARMENTS[0].name}</p>
-            <p className="mt-1 text-sm text-ink/55">{GARMENTS[0].tagline}</p>
-            <p className="mt-3 text-sm">Fra {GARMENTS[0].price},-</p>
-          </div>
-          <div>
-            <div className="flex items-center justify-center bg-sand/60 py-16">
-              <Joggebukse color="#232C3D" className="w-2/5 max-w-[220px]" />
-            </div>
-            <p className="mt-6 font-display text-xl">{GARMENTS[1].name}</p>
-            <p className="mt-1 text-sm text-ink/55">{GARMENTS[1].tagline}</p>
-            <p className="mt-3 text-sm">Fra {GARMENTS[1].price},-</p>
-          </div>
-        </div>
       </section>
 
       {/* DESIGN SELV TEASER */}

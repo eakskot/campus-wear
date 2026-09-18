@@ -30,10 +30,19 @@ const chipClasses = (active: boolean) =>
     active ? "border-ink bg-ink text-cream" : "border-ink/25 text-ink/70 hover:border-ink"
   }`;
 
-export default function Configurator() {
+export default function Configurator({
+  initialGarment: presetGarment,
+  initialColorHex: presetColorHex,
+}: {
+  /** Forhåndsvalgt plagg — brukes når komponenten står innbakt på en
+   * bestemt produktside i stedet for på den frittstående /design-siden. */
+  initialGarment?: GarmentType;
+  initialColorHex?: string;
+} = {}) {
   const params = useSearchParams();
-  const initialGarment = (params.get("garment") as GarmentType) || "hoodie";
-  const initialColor = params.get("color");
+  const initialGarment =
+    presetGarment || (params.get("garment") as GarmentType) || "hoodie";
+  const initialColor = presetColorHex ?? params.get("color");
 
   const [garmentType, setGarmentType] = useState<GarmentType>(
     initialGarment === "joggebukse" ? "joggebukse" : "hoodie"
