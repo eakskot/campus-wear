@@ -10,10 +10,13 @@ export type ColorOption = {
   hex: string;
 };
 
+// Rekkefølgen er også standardvalget — første farge er den som vises til
+// en har valgt noe annet, så Steingrå (nærmest fargen på studiobildene)
+// står først.
 export const COLORS: ColorOption[] = [
+  { name: "Steingrå", hex: "#9A968D" },
   { name: "Sort", hex: "#17181B" },
   { name: "Sand", hex: "#D9CBAE" },
-  { name: "Steingrå", hex: "#9A968D" },
   { name: "Marine", hex: "#232C3D" },
 ];
 
