@@ -221,11 +221,12 @@ export default function Configurator({
           </div>
         )}
 
-        {/* Vinkel-velger — bytter selve produktfotoet. Hoodien har ekte
-            bilder av alle tre (samme fysiske plagg som 360°-spinnet på
-            forsiden); buksa har foreløpig bare front. */}
+        {/* Vinkel-velger — bytter selve produktfotoet. Viser bare vinkler
+            vi faktisk har bilde av for dette plagget (hoodien har alle
+            tre, joggebuksen har front og bak) — ingen "kommer snart"-fane
+            for en vinkel som aldri kommer. */}
         <div className={`flex gap-2 ${embedded ? "" : "mt-5"}`}>
-          {VIEWS.map((v) => (
+          {VIEWS.filter((v) => hasStudioPhoto(garmentType, v.key)).map((v) => (
             <button
               key={v.key}
               onClick={() => setView(v.key)}
