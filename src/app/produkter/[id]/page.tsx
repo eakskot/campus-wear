@@ -57,9 +57,14 @@ export default async function ProductPage({
               {product.name}
             </h1>
           </div>
-          <p className="whitespace-nowrap font-display text-3xl">
-            {product.price},-
-          </p>
+          <div className="text-right">
+            <p className="whitespace-nowrap font-display text-3xl">
+              {product.price},-
+            </p>
+            <p className="mt-1 whitespace-nowrap text-xs text-ink/45">
+              Pris per stk, med skolelogo
+            </p>
+          </div>
         </div>
 
         <p className="mt-6 max-w-xl text-ink/65">{product.description}</p>

@@ -303,7 +303,7 @@ export default function Configurator({
       <div className="flex flex-col gap-9">
         <div>
           <p className="font-body text-xs uppercase tracking-[0.14em] text-ink/45">
-            Farge — <span className="text-ink">{color.name}</span>
+            Farge: <span className="text-ink">{color.name.toUpperCase()}</span>
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <div className="flex gap-2">
@@ -344,7 +344,7 @@ export default function Configurator({
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className={`flex flex-col items-start gap-2 border px-4 py-4 text-left transition ${
+                  className={`flex items-center gap-3 border px-4 py-4 text-left transition ${
                     mode === "upload"
                       ? "border-ink bg-ink text-cream"
                       : "border-ink/20 hover:border-ink"
@@ -365,7 +365,7 @@ export default function Configurator({
 
                 <button
                   onClick={() => setShowElementPicker((v) => !v)}
-                  className={`flex flex-col items-start gap-2 border px-4 py-4 text-left transition ${
+                  className={`flex items-center gap-3 border px-4 py-4 text-left transition ${
                     mode === "element"
                       ? "border-ink bg-ink text-cream"
                       : "border-ink/20 hover:border-ink"
@@ -379,7 +379,7 @@ export default function Configurator({
 
                 <button
                   onClick={() => setMode("text")}
-                  className={`flex flex-col items-start gap-2 border px-4 py-4 text-left transition ${
+                  className={`flex items-center gap-3 border px-4 py-4 text-left transition ${
                     mode === "text"
                       ? "border-ink bg-ink text-cream"
                       : "border-ink/20 hover:border-ink"
@@ -393,7 +393,7 @@ export default function Configurator({
 
                 <button
                   onClick={() => setShowAiNotice(true)}
-                  className="flex flex-col items-start gap-2 border border-transparent bg-gradient-to-br from-[#EDE3FB] to-[#F6E9EE] px-4 py-4 text-left text-ink transition hover:from-[#E4D4F8] hover:to-[#F2DCE4]"
+                  className="flex items-center gap-3 border border-transparent bg-gradient-to-br from-[#EDE3FB] to-[#F6E9EE] px-4 py-4 text-left text-ink transition hover:from-[#E4D4F8] hover:to-[#F2DCE4]"
                 >
                   <span aria-hidden>✦</span>
                   <span className="font-body text-xs uppercase tracking-[0.08em]">
